@@ -11,9 +11,9 @@ PerceptronTest >> digitalComparator: inputs [
     a := inputs first.
     b := inputs second.
 
-    and := Neuron new weights: #(1 1); bias: -1.5.
-    not := Neuron new weights: #(-1); bias: 0.5.
-    nor := Neuron new weights: #(-1 -1); bias: 0.5. 
+    and := Neuron new step; weights: #(1 1); bias: -1.5.
+    not := Neuron new step; weights: #(-1); bias: 0.5.
+    nor := Neuron new step; weights: #(-1 -1); bias: 0.5. 
 
     notA := not feed: { a }. 
     notB := not feed: { b }.
@@ -28,6 +28,7 @@ PerceptronTest >> digitalComparator: inputs [
 PerceptronTest >> testAND [
     | p |
     p := Neuron new.
+	 p step.
     p weights: #(1 1).
     p bias: -1.5.
     
@@ -49,6 +50,7 @@ PerceptronTest >> testDigitalComparator [
 PerceptronTest >> testNOR [
     | p |
     p := Neuron new.
+	 p step.
     p weights: #(-1 -1).
     p bias: 0.5.
     
@@ -62,6 +64,7 @@ PerceptronTest >> testNOR [
 PerceptronTest >> testNOT [
     | p |
     p := Neuron new.
+	 p step.
     p weights: #(-1).
     p bias: 0.5.
     
@@ -73,6 +76,7 @@ PerceptronTest >> testNOT [
 PerceptronTest >> testOR [
     | p |
     p := Neuron new.
+	 p step.
     p weights: #(1 1).
     p bias: -0.5.
     
@@ -86,6 +90,7 @@ PerceptronTest >> testOR [
 PerceptronTest >> testSmallExample [
     | p result |
     p := Neuron new.
+	 p step.
     p weights: #(1 2).
     p bias: -2.
     result := p feed: #(5 2).
@@ -96,6 +101,7 @@ PerceptronTest >> testSmallExample [
 PerceptronTest >> testTrainingNOT [
     | p |
     p := Neuron new.
+	 p step.
     p weights: #(-1).
     p bias: 2.
     
@@ -112,6 +118,7 @@ PerceptronTest >> testTrainingNOT [
 PerceptronTest >> testTrainingOR [
     | p |
     p := Neuron new.
+	 p step.
     p weights: #(-1 -1).
     p bias: 2.
     
@@ -132,6 +139,7 @@ PerceptronTest >> testTrainingOR [
 PerceptronTest >> testWrongFeeding [
     | p |
     p := Neuron new.
+	 p step.
     p weights: #(-1).
     p bias: 0.5.
     
