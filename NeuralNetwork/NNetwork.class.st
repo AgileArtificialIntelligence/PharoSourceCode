@@ -19,8 +19,9 @@ NNetwork >> addLayer: aNeuronLayer [
 ]
 
 { #category : #'as yet unclassified' }
-NNetwork >> backwardPropagateError: expected [
-    self outputLayer backwardPropagateError: expected
+NNetwork >> backwardPropagateError: expectedOutputs [
+	"expectedOutputs corresponds to the outputs we are training the network against"
+	self outputLayer backwardPropagateError: expectedOutputs
 ]
 
 { #category : #initialization }
