@@ -5,10 +5,28 @@ Class {
 		'weights',
 		'bias',
 		'learningRate',
-		'activationFunction'
+		'activationFunction',
+		'delta',
+		'output'
 	],
 	#category : #NeuralNetwork
 }
+
+{ #category : #'as yet unclassified' }
+Neuron >> adjustBias [
+    bias := bias + (learningRate * delta)
+]
+
+{ #category : #'as yet unclassified' }
+Neuron >> adjustDeltaWith: anError [
+    delta := anError * (activationFunction derivative: output)
+]
+
+{ #category : #'as yet unclassified' }
+Neuron >> adjustWeightWithInput: inputs [
+    inputs withIndexDo: [ :anInput :index | 
+        weights at: index put: ((weights at: index) + (learningRate * delta * anInput)) ]
+]
 
 { #category : #accessing }
 Neuron >> bias [
@@ -21,10 +39,17 @@ Neuron >> bias: aNumber [
 ]
 
 { #category : #accessing }
+Neuron >> delta [
+    "Return the delta value computed when propagating the error"
+    ^ delta
+]
+
+{ #category : #accessing }
 Neuron >> feed: inputs [
     | z |
     z := (inputs with: weights collect: [ :x :w | x * w ]) sum + bias.
-    ^ activationFunction eval: z
+    output := activationFunction eval: z.
+    ^ output   
 ]
 
 { #category : #initialization }
@@ -44,6 +69,12 @@ Neuron >> learningRate [
 Neuron >> learningRate: aNumber [
     "Set the learning rate of the neuron"
     learningRate := aNumber
+]
+
+{ #category : #accessing }
+Neuron >> output [
+    "Return the output value, previous computed when doing a feed:"
+    ^ output
 ]
 
 { #category : #'as yet unclassified' }
