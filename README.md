@@ -8,7 +8,6 @@ You can load it via:
 Metacello new
   package: 'NeuralNetwork';
   repository: 'github://AgileArtificialIntelligence/PharoSourceCode/src' ;
-  lock;
   load.
 ```
 
