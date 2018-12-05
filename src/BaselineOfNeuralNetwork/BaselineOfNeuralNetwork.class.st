@@ -14,7 +14,7 @@ BaselineOfNeuralNetwork >> baseline: spec [
 				spec repository: 'github://ObjectProfile/Roassal2/src' ].
 					
 			spec
-				package: 'NeuralNetworks' with: [ spec requires: #('Roassal2') ].
+				package: 'NeuralNetwork' with: [ spec requires: #('Roassal2') ].
 				
 			spec group: 'default' with: #('Roassal2' 'NeuralNetworks').
 			 ]

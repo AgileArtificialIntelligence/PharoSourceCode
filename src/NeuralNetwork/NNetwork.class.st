@@ -78,6 +78,15 @@ NNetwork >> outputLayer [
 ]
 
 { #category : #'as yet unclassified' }
+NNetwork >> predict: inputs [
+	"Make a prediction. This method assume that the number of outputs is the same than the number of different values the network can output"
+	"The index of a collection begins at 1 in Pharo"
+	| outputs |
+	outputs := self feed: inputs.
+	^ (outputs indexOf: (outputs max)) - 1
+]
+
+{ #category : #'as yet unclassified' }
 NNetwork >> train: someInputs desiredOutputs: desiredOutputs [
     "Train the neural network with a set of inputs and some expected output"
     | realOutputs t |
@@ -89,7 +98,69 @@ NNetwork >> train: someInputs desiredOutputs: desiredOutputs [
 ]
 
 { #category : #'as yet unclassified' }
+NNetwork >> train: train nbEpoch: nbEpoch [
+    "Train the network using the train data set."
+    | sumError outputs expectedOutput epochPrecision t |
+    1 to: nbEpoch do: [ :epoch |
+        sumError := 0.
+          epochPrecision := 0.
+        train do: [ :row |
+            outputs := self feed: row allButLast.
+            expectedOutput := (1 to: self numberOfOutputs) collect: [ :notUsed | 0 ].
+            expectedOutput at: (row last) + 1 put: 1.
+            (row last = (self predict: row allButLast)) ifTrue: [ epochPrecision := epochPrecision + 1 ].
+            t := (1 to: expectedOutput size) 
+                    collect: [ :i | ((expectedOutput at: i) - (outputs at: i)) raisedTo: 2 ].
+            sumError := sumError + t sum.
+            self backwardPropagateError: expectedOutput.
+            self updateWeight: row allButLast.
+        ].
+        errors add: sumError.
+          precisions add: (epochPrecision / train size) asFloat.
+    ] 
+]
+
+{ #category : #'as yet unclassified' }
 NNetwork >> updateWeight: initialInputs [
     "Update the weights of the neurons using the initial inputs"
     layers first updateWeight: initialInputs
+]
+
+{ #category : #'as yet unclassified' }
+NNetwork >> viewErrorCurve [
+    | b ds |
+    errors
+        ifEmpty: [ ^ RTView new
+                add: (RTLabel elementOn: 'Should first run the network');
+                yourself ].
+    b := RTDoubleGrapher new.
+
+    "We define the size of the charting area"
+    b extent: 500 @ 300.
+    ds := RTData new.
+    ds samplingIfMoreThan: 2000.
+    ds noDot.
+    ds connectColor: Color blue.
+    ds points: (errors collectWithIndex: [ :y :i | i -> y ]).
+    ds x: #key.
+    ds y: #value.
+    ds dotShape rectangle color: Color blue.
+    b add: ds.
+    ds := RTData new.
+    ds samplingIfMoreThan: 2000.
+    ds noDot.
+    ds connectColor: Color red.
+    ds points: (precisions collectWithIndex: [ :y :i | i -> y ]).
+    ds x: #key.
+    ds y: #value.
+    ds dotShape rectangle color: Color blue.
+    b addRight: ds.
+    b axisX
+        noDecimal;
+        title: 'Epoch'.
+    b axisY title: 'Error'.
+    b axisYRight
+        title: 'Precision';
+        color: Color red.
+    ^ b
 ]
