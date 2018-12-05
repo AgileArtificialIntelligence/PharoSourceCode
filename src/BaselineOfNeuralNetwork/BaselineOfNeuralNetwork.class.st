@@ -16,6 +16,6 @@ BaselineOfNeuralNetwork >> baseline: spec [
 			spec
 				package: 'NeuralNetwork' with: [ spec requires: #('Roassal2') ].
 				
-			spec group: 'default' with: #('Roassal2' 'NeuralNetworks').
+			spec group: 'default' with: #('Roassal2' 'NeuralNetwork').
 			 ]
 ]
