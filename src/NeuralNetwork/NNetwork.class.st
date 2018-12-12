@@ -61,7 +61,9 @@ NNetwork >> initialize [
 
 { #category : #accessing }
 NNetwork >> learningRate: aLearningRate [
-	"Set the learning rate for all the layers"
+	"Set the learning rate for all the layers
+	Note that this method should be called after configuring the network, and _not_ before"
+	self assert: [ layers notEmpty ] description: 'learningRate: should be invoked after configuring the network'.
 	layers do: [ :l | l learningRate: aLearningRate ] 
 ]
 
