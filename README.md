@@ -6,7 +6,7 @@ You can load it via:
 
 ```Smalltalk
 Metacello new
-  package: 'NeuralNetwork';
+  baseline: 'NeuralNetwork';
   repository: 'github://AgileArtificialIntelligence/PharoSourceCode/src' ;
   load.
 ```
@@ -15,7 +15,7 @@ Metacello new
 If you have a local copy:
 ```Smalltalk
 Metacello new
-  package: 'NeuralNetwork';
+  baseline: 'NeuralNetwork';
   repository: 'gitlocal:///Users/alexandrebergel/Dropbox/GitRepos/PharoSourceCode' ;
   lock;
   load.
