@@ -2,6 +2,7 @@ Class {
 	#name : #GAEngine,
 	#superclass : #GAObject,
 	#instVars : [
+		'beforeCreatingInitialIndividual',
 		'fitnessBlock',
 		'createGeneBlock',
 		'numberOfGenes',
@@ -16,6 +17,17 @@ Class {
 	],
 	#category : #'GeneticAlgorithm-Core'
 }
+
+{ #category : #accessing }
+GAEngine >> beforeCreatingInitialIndividual [
+	^ beforeCreatingInitialIndividual
+]
+
+{ #category : #accessing }
+GAEngine >> beforeCreatingInitialIndividual: oneArgBlock [
+	"The block provided as argument is evaluated _before_ creating each individual of the initial population"
+	beforeCreatingInitialIndividual := oneArgBlock
+]
 
 { #category : #accessing }
 GAEngine >> beforeRun [
@@ -113,6 +125,8 @@ GAEngine >> initialize [
     crossoverOperator random: random.
     
     self selection: GATournamentSelection new.
+
+	beforeCreatingInitialIndividual := [ :rand | "do nothing" ]
 ]
 
 { #category : #accessing }
@@ -122,6 +136,7 @@ GAEngine >> initializePopulation [
     populationSize
         timesRepeat: [ 
             | ind |
+				beforeCreatingInitialIndividual value: random.
             ind := GAIndividual new.
             population
                 add:

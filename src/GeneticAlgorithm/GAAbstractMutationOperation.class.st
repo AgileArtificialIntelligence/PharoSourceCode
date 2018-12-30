@@ -14,6 +14,11 @@ GAAbstractMutationOperation >> doMutate: individual [
 ]
 
 { #category : #initialization }
+GAAbstractMutationOperation >> geneFactoryBlock: oneArgBlock [
+	"Do nothing. May be overriden if necessary"
+]
+
+{ #category : #initialization }
 GAAbstractMutationOperation >> initialize [
     super initialize.
     self mutationRate: 0.01
