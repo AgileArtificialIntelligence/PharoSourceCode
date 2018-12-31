@@ -15,7 +15,7 @@ GAAbstractMutationOperation >> doMutate: individual [
 
 { #category : #initialization }
 GAAbstractMutationOperation >> geneFactoryBlock: oneArgBlock [
-	"Do nothing. May be overriden if necessary"
+	"Do nothing. May be overridden if necessary"
 ]
 
 { #category : #initialization }

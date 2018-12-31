@@ -1,6 +1,6 @@
 Class {
 	#name : #GAExample,
-	#superclass : #GAAbstractMutationOperation,
+	#superclass : #Object,
 	#category : #'GeneticAlgorithm-Core'
 }
 

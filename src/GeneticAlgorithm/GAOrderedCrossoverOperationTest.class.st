@@ -42,7 +42,6 @@ GAOrderedCrossoverOperationTest >> testCrossover3 [
 
 { #category : #running }
 GAOrderedCrossoverOperationTest >> testCrossover4 [
-
     | i3 |  
     i1 := GAIndividual new genes: #(1 2 3 4 5 6 7 8 9).
     i2 := GAIndividual new genes: #(9 8 7 6 5 4 3 2 1).
