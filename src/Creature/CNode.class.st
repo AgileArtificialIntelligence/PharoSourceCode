@@ -1,0 +1,50 @@
+Class {
+	#name : #CNode,
+	#superclass : #CVisualElement,
+	#instVars : [
+		'friction',
+		'disp'
+	],
+	#category : #Creature
+}
+
+{ #category : #accessing }
+CNode >> addToDisp: d [
+	disp := disp + d
+]
+
+{ #category : #'as yet unclassified' }
+CNode >> createElement [
+	element := RTEllipse new size: 10; color: Color red trans; element.
+	element @ RTDraggable	
+]
+
+{ #category : #accessing }
+CNode >> disp [
+	^ disp
+]
+
+{ #category : #accessing }
+CNode >> disp: aPoint [
+	disp := aPoint
+]
+
+{ #category : #accessing }
+CNode >> position [
+	^ element position
+]
+
+{ #category : #accessing }
+CNode >> resetDisp [
+	disp := 0.
+]
+
+{ #category : #accessing }
+CNode >> translateBy: aPoint [
+	element translateBy: aPoint
+]
+
+{ #category : #accessing }
+CNode >> translateTo: aPoint [
+	element translateTo: aPoint
+]
