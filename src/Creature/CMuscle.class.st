@@ -8,10 +8,18 @@ Class {
 		'extendedTime',
 		'contractedTime',
 		'strenght',
-		'extendedLength'
+		'extendedLength',
+		'time'
 	],
 	#category : #Creature
 }
+
+{ #category : #accessing }
+CMuscle >> beat [
+	time := time + 1.
+	time = self maxTime ifTrue: [ time := 0 ].
+
+]
 
 { #category : #accessing }
 CMuscle >> contractedLength [
@@ -66,12 +74,18 @@ CMuscle >> extendedTime: anObject [
 { #category : #initialization }
 CMuscle >> initialize [
 	super initialize.
-	strenght := 1
+	strenght := 1.
+	time := 0
 ]
 
 { #category : #accessing }
 CMuscle >> length [
 	^ 30
+]
+
+{ #category : #accessing }
+CMuscle >> maxTime [
+	^ 10
 ]
 
 { #category : #accessing }

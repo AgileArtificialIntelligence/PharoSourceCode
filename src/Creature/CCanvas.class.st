@@ -16,10 +16,7 @@ CCanvas >> addCreature: aCreature [
 ]
 
 { #category : #accessing }
-CCanvas >> beat [
-	time := time + 1.
-	time = self maxTime ifTrue: [ time := 0 ].
-	
+CCanvas >> beat [	
 	creatures do: #reachStable.
 ]
 
@@ -34,11 +31,6 @@ CCanvas >> initialize [
 	creatures := OrderedCollection new.
 	time := 0.
 	self createElement
-]
-
-{ #category : #accessing }
-CCanvas >> maxTime [
-	^ 10
 ]
 
 { #category : #accessing }

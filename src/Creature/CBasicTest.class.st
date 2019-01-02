@@ -26,5 +26,6 @@ CBasicTest >> testReachStable [
 	creature := CCreature new configureNbNodes: 3 nbMuscles: 3.
 	c := CCanvas new.
 	c addCreature: creature.
-	creature reachStable 
+	creature reachStable.
+	(CMuscle new maxTime * 2) timesRepeat: [ creature beat ]
 ]

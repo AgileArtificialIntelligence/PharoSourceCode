@@ -34,6 +34,14 @@ CNode >> position [
 	^ element position
 ]
 
+{ #category : #printing }
+CNode >> printOn: str [
+	super printOn: str.
+	str nextPut: $<.
+	str nextPutAll: self hash asString.
+	str nextPut: $>.
+]
+
 { #category : #accessing }
 CNode >> resetDisp [
 	disp := 0.
