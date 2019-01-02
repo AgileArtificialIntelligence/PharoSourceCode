@@ -11,6 +11,7 @@ Class {
 
 { #category : #accessing }
 CCreature >> beat [
+	nodes do: #beat.
 	muscles do: #beat.
 	self reachStable
 ]
@@ -116,4 +117,12 @@ CCreature >> reachStable [
 				(old y - (( (oldPositions at: e) y - old y ) * friction)).
 			oldPositions at: e put: old.].
  "
+]
+
+{ #category : #actions }
+CCreature >> translateTo: aPoint [
+	| averageCenter delta |
+	averageCenter := ((self nodes collect: #position) sum) / self nodes size.
+	delta := aPoint - averageCenter.
+	self nodes do: [ :n | n translateBy: delta ]
 ]

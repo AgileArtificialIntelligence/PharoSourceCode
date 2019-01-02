@@ -13,6 +13,11 @@ CNode >> addToDisp: d [
 	disp := disp + d
 ]
 
+{ #category : #accessing }
+CNode >> beat [
+	
+]
+
 { #category : #'as yet unclassified' }
 CNode >> createElement [
 	element := RTEllipse new size: 10; color: Color red trans; element.
@@ -27,6 +32,11 @@ CNode >> disp [
 { #category : #accessing }
 CNode >> disp: aPoint [
 	disp := aPoint
+]
+
+{ #category : #accessing }
+CNode >> gravity [
+	^ 10
 ]
 
 { #category : #accessing }

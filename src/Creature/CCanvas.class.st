@@ -3,7 +3,8 @@ Class {
 	#superclass : #CVisualElement,
 	#instVars : [
 		'creatures',
-		'time'
+		'time',
+		'platforms'
 	],
 	#category : #Creature
 }
@@ -13,6 +14,13 @@ CCanvas >> addCreature: aCreature [
 	creatures add: aCreature.
 	element addAll: (aCreature nodes collect: #element).
 	element addAll: (aCreature muscles collect: #element).
+]
+
+{ #category : #accessing }
+CCanvas >> addPlatform: aPlatform [
+	platforms add: aPlatform.
+	aPlatform createElement.
+	element add: aPlatform element.
 ]
 
 { #category : #accessing }
@@ -29,12 +37,16 @@ CCanvas >> createElement [
 CCanvas >> initialize [
 	super initialize.
 	creatures := OrderedCollection new.
+	platforms := OrderedCollection new. 
 	time := 0.
 	self createElement
 ]
 
 { #category : #accessing }
 CCanvas >> open [
+
+	creatures do: [ :c | c translateTo: 0 @ -100 ].
+
 	element
 		addAnimation:
 			(RTActiveAnimation new
