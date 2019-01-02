@@ -3,7 +3,8 @@ Class {
 	#superclass : #CVisualElement,
 	#instVars : [
 		'friction',
-		'disp'
+		'disp',
+		'speedVector'
 	],
 	#category : #Creature
 }
@@ -15,12 +16,25 @@ CNode >> addToDisp: d [
 
 { #category : #accessing }
 CNode >> beat [
+	self translateBy: speedVector.
+	speedVector := speedVector + (0 @ self gravity).
 	
+]
+
+{ #category : #accessing }
+CNode >> checkForCollision: platforms [
+"(platforms anySatisfy: [ :p | p touch: self ]) ifTrue: [ speedVector := 0 @ 0 ].
+	"
+	platforms
+		do: [ :p | 
+			(p touch: self)
+				ifTrue: [ speedVector := 0 @ 0.
+					p adjustNodeIfNecessary: self ] ]
 ]
 
 { #category : #'as yet unclassified' }
 CNode >> createElement [
-	element := RTEllipse new size: 10; color: Color red trans; element.
+	element := RTEllipse new size: self nodeSize; color: Color red trans; element.
 	element @ RTDraggable	
 ]
 
@@ -36,6 +50,17 @@ CNode >> disp: aPoint [
 
 { #category : #accessing }
 CNode >> gravity [
+	^ 2
+]
+
+{ #category : #initialization }
+CNode >> initialize [
+	super initialize.
+	speedVector := 0 @ 0
+]
+
+{ #category : #'as yet unclassified' }
+CNode >> nodeSize [
 	^ 10
 ]
 

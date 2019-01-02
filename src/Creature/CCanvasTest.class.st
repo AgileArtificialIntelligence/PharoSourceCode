@@ -13,5 +13,5 @@ CCanvasTest >> testBasic [
 	c := CCanvas new.
 	c addPlatform: CPlatform new.
 	c addCreature: creature.
-	1000 timesRepeat: [ creature beat ]
+	1000 timesRepeat: [ c beat ]
 ]

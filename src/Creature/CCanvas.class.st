@@ -26,6 +26,7 @@ CCanvas >> addPlatform: aPlatform [
 { #category : #accessing }
 CCanvas >> beat [	
 	creatures do: #beat.
+	creatures do: [ :c | c checkForCollision: platforms ]
 ]
 
 { #category : #'as yet unclassified' }
@@ -45,7 +46,7 @@ CCanvas >> initialize [
 { #category : #accessing }
 CCanvas >> open [
 
-	creatures do: [ :c | c translateTo: 0 @ -100 ].
+	creatures do: [ :c | c translateTo: 0 @ -300 ].
 
 	element
 		addAnimation:

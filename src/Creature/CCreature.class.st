@@ -16,6 +16,11 @@ CCreature >> beat [
 	self reachStable
 ]
 
+{ #category : #accessing }
+CCreature >> checkForCollision: platforms [
+	nodes do: [ :n | n checkForCollision: platforms ]
+]
+
 { #category : #'as yet unclassified' }
 CCreature >> configureNbNodes: nbNodes nbMuscles: nbMuscle [
 	| m r n1 n2 tryNewNode1 tryNewNode2 |

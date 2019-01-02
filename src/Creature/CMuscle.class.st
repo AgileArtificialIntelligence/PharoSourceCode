@@ -63,7 +63,7 @@ CMuscle >> extendedLength: anObject [
 { #category : #initialization }
 CMuscle >> initialize [
 	super initialize.
-	strength := 1.
+	strength := 5.
 	time := 0
 ]
 
