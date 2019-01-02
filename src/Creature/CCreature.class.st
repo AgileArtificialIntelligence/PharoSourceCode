@@ -2,18 +2,17 @@ Class {
 	#name : #CCreature,
 	#superclass : #Object,
 	#instVars : [
-		'clock',
 		'nodes',
 		'muscles',
-		'alpha',
-		'time'
+		'alpha'
 	],
 	#category : #Creature
 }
 
 { #category : #accessing }
 CCreature >> beat [
-	muscles do: #beat
+	muscles do: #beat.
+	self reachStable
 ]
 
 { #category : #'as yet unclassified' }
@@ -55,7 +54,6 @@ CCreature >> configureNbNodes: nbNodes nbMuscles: nbMuscle [
 		
 		
 		m contractedTime: (r nextInt: m maxTime - 4) + 2.
-		m extendedTime: m maxTime - m contractedTime. "Probably not useful. This extendedTime should be removed!"
 		
 		muscles add: m ].
 	
@@ -71,7 +69,7 @@ CCreature >> initialize [
 	nodes := OrderedCollection new.
 	muscles := OrderedCollection new.
 	alpha := 0.1.
-	time := 0
+	
 ]
 
 { #category : #accessing }
@@ -88,8 +86,9 @@ CCreature >> nodes [
 { #category : #'as yet unclassified' }
 CCreature >> reachStable [
 	| k from fp to tp x y len |
-	alpha := alpha * 0.99.
+"	alpha := alpha * 0.99.
 	alpha < 0.005 ifTrue: [ ^ self ].
+"
 	nodes do: [ :n | n disp: 0 ].
 	muscles do: [ :m | 
 					from := m node1. 
@@ -100,7 +99,7 @@ CCreature >> reachStable [
 					y := tp y - fp y.
 					len := ((x * x) + (y * y)) sqrt.
 					((len closeTo: 0) not) ifTrue: [ 
-						len := alpha * (m strenght) * (len - (m length)) / len.
+						len := alpha * (m strength) * (len - (m length)) / len.
 						x := x * len.
 						y := y * len.
 						"k := (weights at: from) / (( weights at: from) +( weights at: to ))."

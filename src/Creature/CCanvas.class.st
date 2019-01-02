@@ -17,7 +17,7 @@ CCanvas >> addCreature: aCreature [
 
 { #category : #accessing }
 CCanvas >> beat [	
-	creatures do: #reachStable.
+	creatures do: #beat.
 ]
 
 { #category : #'as yet unclassified' }

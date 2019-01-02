@@ -5,11 +5,10 @@ Class {
 		'node1',
 		'node2',
 		'contractedLength',
-		'extendedTime',
 		'contractedTime',
-		'strenght',
 		'extendedLength',
-		'time'
+		'time',
+		'strength'
 	],
 	#category : #Creature
 }
@@ -37,8 +36,8 @@ CMuscle >> contractedTime [
 ]
 
 { #category : #accessing }
-CMuscle >> contractedTime: anObject [
-	contractedTime := anObject
+CMuscle >> contractedTime: anInteger [
+	contractedTime := anInteger
 ]
 
 { #category : #'as yet unclassified' }
@@ -61,31 +60,23 @@ CMuscle >> extendedLength: anObject [
 	extendedLength := anObject
 ]
 
-{ #category : #accessing }
-CMuscle >> extendedTime [
-	^ extendedTime
-]
-
-{ #category : #accessing }
-CMuscle >> extendedTime: anObject [
-	extendedTime := anObject
-]
-
 { #category : #initialization }
 CMuscle >> initialize [
 	super initialize.
-	strenght := 1.
+	strength := 1.
 	time := 0
 ]
 
 { #category : #accessing }
 CMuscle >> length [
-	^ 30
+	^ time < contractedTime
+		ifTrue: [ contractedLength ]
+		ifFalse: [ extendedLength ]
 ]
 
 { #category : #accessing }
 CMuscle >> maxTime [
-	^ 10
+	^ 50
 ]
 
 { #category : #accessing }
@@ -109,13 +100,13 @@ CMuscle >> node2: anObject [
 ]
 
 { #category : #accessing }
-CMuscle >> strenght [
-	^ strenght
+CMuscle >> strenght: anObject [
+	strength := anObject
 ]
 
 { #category : #accessing }
-CMuscle >> strenght: anObject [
-	strenght := anObject
+CMuscle >> strength [
+	^ strength
 ]
 
 { #category : #'as yet unclassified' }
