@@ -3,17 +3,11 @@ Class {
 	#superclass : #CVisualElement,
 	#instVars : [
 		'friction',
-		'disp',
 		'speedVector',
 		'isOnGround'
 	],
 	#category : #Creature
 }
-
-{ #category : #accessing }
-CNode >> addToDisp: d [
-	disp := disp + d
-]
 
 { #category : #accessing }
 CNode >> beat [
@@ -41,16 +35,6 @@ CNode >> checkForCollision: platforms [
 CNode >> createElement [
 	element := RTEllipse new size: self nodeSize; color: Color red trans; element.
 	element @ RTDraggable	
-]
-
-{ #category : #accessing }
-CNode >> disp [
-	^ disp
-]
-
-{ #category : #accessing }
-CNode >> disp: aPoint [
-	disp := aPoint
 ]
 
 { #category : #accessing }
@@ -86,11 +70,6 @@ CNode >> printOn: str [
 	str nextPut: $<.
 	str nextPutAll: self hash asString.
 	str nextPut: $>.
-]
-
-{ #category : #accessing }
-CNode >> resetDisp [
-	disp := 0.
 ]
 
 { #category : #accessing }
