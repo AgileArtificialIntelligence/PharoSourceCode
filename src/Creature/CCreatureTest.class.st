@@ -39,3 +39,20 @@ CCreatureTest >> testBasic [
 	creature beat.
 	self assert: m length equals: 10.
 ]
+
+{ #category : #tests }
+CCreatureTest >> testMaterialize [
+	| values |
+	values := creature materialize: #(15 60 5).
+	self assert: values muscles first contractedLength equals: 15.
+	self assert: values muscles first extendedLength equals: 60.
+	self assert: values muscles first strength equals: 5.
+]
+
+{ #category : #tests }
+CCreatureTest >> testSerialization [
+	| values |
+	values := creature serialize.
+	self assert: values size equals: (creature muscles size * 3).
+	self assert: values equals: #(10 50 3).
+]

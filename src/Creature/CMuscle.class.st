@@ -63,7 +63,6 @@ CMuscle >> extendedLength: anObject [
 { #category : #initialization }
 CMuscle >> initialize [
 	super initialize.
-	strength := 5.
 	time := 0
 ]
 
@@ -76,7 +75,7 @@ CMuscle >> length [
 
 { #category : #accessing }
 CMuscle >> maxTime [
-	^ 50
+	^ 200
 ]
 
 { #category : #accessing }

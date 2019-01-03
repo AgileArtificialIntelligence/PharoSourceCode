@@ -57,9 +57,8 @@ CCreature >> configureNbNodes: nbNodes nbMuscles: nbMuscle [
 		m node2: n2.
 		m contractedLength: 10 + (r nextInt: 30).
 		m extendedLength: (r nextInt: 30) + (m contractedLength).
-		
-		
 		m contractedTime: (r nextInt: m maxTime - 4) + 2.
+		m strenght: (r nextInt: 5) + 2.
 		
 		muscles add: m ].
 	
@@ -76,6 +75,16 @@ CCreature >> initialize [
 	muscles := OrderedCollection new.
 	alpha := 0.3.
 	
+]
+
+{ #category : #serialization }
+CCreature >> materialize: anArrayOfValues [
+	| valuesPerMuscles |
+	valuesPerMuscles := anArrayOfValues groupsOf: 3 atATimeCollect: [ :v | v ].
+	muscles with: valuesPerMuscles do: [ :m :values | 
+		m contractedLength: values first. 
+		m extendedLength: values second.
+		m strenght: values third ]
 ]
 
 { #category : #accessing }
@@ -119,6 +128,12 @@ CCreature >> reachStable [
 				(wishedPosition x - ((oldPosition x - wishedPosition x) * friction)) @ 
 				(wishedPosition y - ((oldPosition y - wishedPosition y) * friction)) ].
 	originalPositions removeAll
+]
+
+{ #category : #serialization }
+CCreature >> serialize [
+	
+	^ (muscles flatCollect: [ :m | Array with: m contractedLength with: m extendedLength with: m strength ]) asArray
 ]
 
 { #category : #actions }
