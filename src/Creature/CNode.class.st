@@ -50,7 +50,7 @@ CNode >> disp: aPoint [
 
 { #category : #accessing }
 CNode >> gravity [
-	^ 2
+	^ 0.01
 ]
 
 { #category : #initialization }
