@@ -4,7 +4,8 @@ Class {
 	#instVars : [
 		'friction',
 		'disp',
-		'speedVector'
+		'speedVector',
+		'isOnGround'
 	],
 	#category : #Creature
 }
@@ -16,20 +17,24 @@ CNode >> addToDisp: d [
 
 { #category : #accessing }
 CNode >> beat [
-	self translateBy: speedVector.
+	self translateBy: speedVector / 5.
 	speedVector := speedVector + (0 @ self gravity).
 	
 ]
 
 { #category : #accessing }
 CNode >> checkForCollision: platforms [
-"(platforms anySatisfy: [ :p | p touch: self ]) ifTrue: [ speedVector := 0 @ 0 ].
+	"(platforms anySatisfy: [ :p | p touch: self ]) ifTrue: [ speedVector := 0 @ 0 ].
 	"
+
+	isOnGround := false.
 	platforms
 		do: [ :p | 
 			(p touch: self)
-				ifTrue: [ speedVector := 0 @ 0.
-					p adjustNodeIfNecessary: self ] ]
+				ifTrue: [ 
+					speedVector := 0 @ 0.
+					p adjustNodeIfNecessary: self.
+					isOnGround := true ] ]
 ]
 
 { #category : #'as yet unclassified' }
@@ -50,13 +55,19 @@ CNode >> disp: aPoint [
 
 { #category : #accessing }
 CNode >> gravity [
-	^ 0.01
+	^ 1
 ]
 
 { #category : #initialization }
 CNode >> initialize [
 	super initialize.
-	speedVector := 0 @ 0
+	speedVector := 0 @ 0.
+	isOnGround := false
+]
+
+{ #category : #accessing }
+CNode >> isOnGround [
+	^ isOnGround
 ]
 
 { #category : #'as yet unclassified' }

@@ -74,7 +74,7 @@ CCreature >> initialize [
 	super initialize.
 	nodes := OrderedCollection new.
 	muscles := OrderedCollection new.
-	alpha := 0.1.
+	alpha := 0.3.
 	
 ]
 
@@ -91,11 +91,12 @@ CCreature >> nodes [
 
 { #category : #'as yet unclassified' }
 CCreature >> reachStable [
-	| k from fp to tp x y len |
+	| k from fp to tp x y len originalPositions wishedPosition friction |
 "	alpha := alpha * 0.99.
 	alpha < 0.005 ifTrue: [ ^ self ].
 "
-	nodes do: [ :n | n disp: 0 ].
+	originalPositions := OrderedCollection new.
+	nodes do: [ :n | originalPositions add: n position ].
 	muscles do: [ :m | 
 					from := m node1. 
 					fp := from position.
@@ -115,13 +116,12 @@ CCreature >> reachStable [
 						from translateTo: (fp x + (x * k))@(fp y + (y * k)) ] 
 	].
 
-	"nodes do: [ :e | 
-			old := e position.
-			e translateTo: 
-				(old x - (( (oldPositions at: e) x - old x ) * friction)) @ 
-				(old y - (( (oldPositions at: e) y - old y ) * friction)).
-			oldPositions at: e put: old.].
- "
+	nodes with: originalPositions do: [ :aNode :oldPosition | 
+			wishedPosition := aNode position.
+			aNode isOnGround ifTrue: [ friction := 0.5 ] ifFalse: [ friction := 0 ].
+			aNode translateTo: 
+				(wishedPosition x - ((oldPosition x - wishedPosition x) * friction)) @ 
+				(wishedPosition y - ((oldPosition y - wishedPosition y) * friction)) ].
 ]
 
 { #category : #actions }
