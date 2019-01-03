@@ -4,7 +4,8 @@ Class {
 	#instVars : [
 		'nodes',
 		'muscles',
-		'alpha'
+		'alpha',
+		'random'
 	],
 	#category : #Creature
 }
@@ -23,13 +24,12 @@ CCreature >> checkForCollision: platforms [
 
 { #category : #'as yet unclassified' }
 CCreature >> configureNbNodes: nbNodes nbMuscles: nbMuscle [
-	| m r n1 n2 tryNewNode1 tryNewNode2 |
-	r := Random seed: 42.
+	| m n1 n2 tryNewNode1 tryNewNode2 |
 	nbNodes timesRepeat: [ nodes add: (CNode new) ].
 	nbMuscle timesRepeat: [ 
 		m := CMuscle new.
 		
-		n1 := nodes atRandom: r.
+		n1 := nodes atRandom: random.
 		n2 := n1.
 		tryNewNode1 := 0.
 		tryNewNode2 := 0.
@@ -45,9 +45,9 @@ CCreature >> configureNbNodes: nbNodes nbMuscles: nbMuscle [
 			whileTrue: [
 
 				[ (tryNewNode2 < 10) and: [ (n2 == n1) or: [ muscles anySatisfy: [ :mm | mm usesNodes: { n1 . n2 } ] ] ] ]
-					whileTrue: [ tryNewNode2 := tryNewNode2 + 1. n2 := nodes atRandom: r ].
+					whileTrue: [ tryNewNode2 := tryNewNode2 + 1. n2 := nodes atRandom: random ].
 
-					tryNewNode2 = 10 ifTrue: [ tryNewNode1 := tryNewNode1 + 1. tryNewNode2 := 0. n1 := nodes atRandom: r  ]
+					tryNewNode2 = 10 ifTrue: [ tryNewNode1 := tryNewNode1 + 1. tryNewNode2 := 0. n1 := nodes atRandom: random  ]
 					 ].
 
 "		[ (try <= 10 or: [ n2 == n1]) or: [ muscles anySatisfy: [ :mm | mm usesNodes: { n1 . n2 } ] ] ]  
@@ -55,17 +55,21 @@ CCreature >> configureNbNodes: nbNodes nbMuscles: nbMuscle [
 "		
 		m node1: n1.
 		m node2: n2.
-		m contractedLength: 10 + (r nextInt: 30).
-		m extendedLength: (r nextInt: 30) + (m contractedLength).
-		m contractedTime: (r nextInt: m maxTime - 4) + 2.
-		m strenght: (r nextInt: 5) + 2.
+
+		m contractedLength: 10 + (random nextInt: 30).
+		m extendedLength: 10 + (random nextInt: 30).
+		
+"		m contractedLength: 10 + (r nextInt: 30).
+		m extendedLength: (r nextInt: 30) + (m contractedLength)."
+		m contractedTime: (random nextInt: m maxTime - 4) + 2.
+		m strenght: (random nextInt: 4) + 2.
 		
 		muscles add: m ].
 	
 	nodes do: #createElement.
 	muscles do: #createElement.
 	
-	nodes do: [ :n | n translateBy: (r nextInt: 100) @ (r nextInt: 100) ]
+	nodes do: [ :n | n translateBy: (random nextInt: 100) @ (random nextInt: 100) ]
 ]
 
 { #category : #initialization }
@@ -74,6 +78,7 @@ CCreature >> initialize [
 	nodes := OrderedCollection new.
 	muscles := OrderedCollection new.
 	alpha := 0.3.
+	random := Random seed: 42.
 	
 ]
 
@@ -98,6 +103,11 @@ CCreature >> nodes [
 	
 ]
 
+{ #category : #actions }
+CCreature >> position [
+	^ (self nodes collect: #position) sum / self nodes size
+]
+
 { #category : #'as yet unclassified' }
 CCreature >> reachStable [
 	| k from fp to tp x y len originalPositions wishedPosition friction |
@@ -118,12 +128,14 @@ CCreature >> reachStable [
 						k := 0.5.
 						to translateTo: (tp x - (x * k)) @ (tp y - (y * k)).
 						k := 1 - k.
-						from translateTo: (fp x + (x * k)) @ (fp y + (y * k)) ] 
+						from translateTo: (fp x + (x * k)) @ (fp y + (y * k)) ].
+					
+					self haltIf: [ to position x > 300 ].
 	].
 
 	nodes with: originalPositions do: [ :aNode :oldPosition | 
 			wishedPosition := aNode position.
-			friction := aNode isOnGround ifTrue: [ 0.5 ] ifFalse: [ 0 ].
+			friction := aNode isOnGround ifTrue: [ 1 ] ifFalse: [ 0.5 ].
 			aNode translateTo: 
 				(wishedPosition x - ((oldPosition x - wishedPosition x) * friction)) @ 
 				(wishedPosition y - ((oldPosition y - wishedPosition y) * friction)) ].
@@ -139,7 +151,7 @@ CCreature >> serialize [
 { #category : #actions }
 CCreature >> translateTo: aPoint [
 	| averageCenter delta |
-	averageCenter := ((self nodes collect: #position) sum) / self nodes size.
+	averageCenter := self position.
 	delta := aPoint - averageCenter.
 	self nodes do: [ :n | n translateBy: delta ]
 ]

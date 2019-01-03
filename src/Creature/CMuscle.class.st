@@ -56,8 +56,8 @@ CMuscle >> extendedLength [
 ]
 
 { #category : #accessing }
-CMuscle >> extendedLength: anObject [
-	extendedLength := anObject
+CMuscle >> extendedLength: aLength [
+	extendedLength := aLength
 ]
 
 { #category : #initialization }
