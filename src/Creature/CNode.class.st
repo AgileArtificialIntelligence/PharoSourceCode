@@ -11,6 +11,9 @@ Class {
 
 { #category : #accessing }
 CNode >> beat [
+	| previousPosition |
+	previousPosition := element position.
+	Transcript show: self printString; show: '  '; show: previousPosition asString; cr.
 	self translateBy: speedVector / 5.
 	speedVector := speedVector + (0 @ self gravity).
 	
@@ -39,7 +42,7 @@ CNode >> createElement [
 
 { #category : #accessing }
 CNode >> gravity [
-	^ 1
+	^ 0.01
 ]
 
 { #category : #initialization }
@@ -74,10 +77,24 @@ CNode >> printOn: str [
 
 { #category : #accessing }
 CNode >> translateBy: aPoint [
-	element translateBy: aPoint
+self haltIf: [ aPoint x isNaN ].
+self haltIf: [ aPoint y isNaN ].
+
+self haltIf: [ element position x isNaN ].
+self haltIf: [ element position y isNaN ].
+	element translateBy: aPoint.
+	
+
+self haltIf: [ element position x isNaN ].
+self haltIf: [ element position y isNaN ].
 ]
 
 { #category : #accessing }
 CNode >> translateTo: aPoint [
-	element translateTo: aPoint
+self haltIf: [ aPoint x isNaN ].
+self haltIf: [ aPoint y isNaN ].
+	element translateTo: aPoint.
+	
+self haltIf: [ element position x isNaN ].
+self haltIf: [ element position y isNaN ].
 ]

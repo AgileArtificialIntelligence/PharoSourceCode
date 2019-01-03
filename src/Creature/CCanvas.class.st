@@ -46,7 +46,7 @@ CCanvas >> initialize [
 { #category : #accessing }
 CCanvas >> open [
 
-	creatures do: [ :c | c translateTo: 0 @ -300 ].
+	creatures do: #resetPosition.
 
 	element
 		addAnimation:
