@@ -68,6 +68,7 @@ CMuscle >> initialize [
 
 { #category : #accessing }
 CMuscle >> length [
+	"Maybe rename it to ideal length"
 	^ time < contractedTime
 		ifTrue: [ contractedLength ]
 		ifFalse: [ extendedLength ]

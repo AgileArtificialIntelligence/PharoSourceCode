@@ -4,19 +4,29 @@ Class {
 	#instVars : [
 		'friction',
 		'speedVector',
-		'isOnGround'
+		'force',
+		'isOnGround',
+		'gravityForce'
 	],
 	#category : #Creature
 }
 
+{ #category : #initialization }
+CNode >> addForce: aForceAsPoint [
+	force := force + aForceAsPoint
+]
+
 { #category : #accessing }
 CNode >> beat [
-	| previousPosition |
+	speedVector := speedVector + gravityForce + force. 
+	self translateBy: speedVector
+	
+"	| previousPosition |
 	previousPosition := element position.
 	Transcript show: self printString; show: '  '; show: previousPosition asString; cr.
 	self translateBy: speedVector / 5.
 	speedVector := speedVector + (0 @ self gravity).
-	
+	"
 ]
 
 { #category : #accessing }
@@ -42,14 +52,21 @@ CNode >> createElement [
 
 { #category : #accessing }
 CNode >> gravity [
-	^ 0.01
+	^ 2
+]
+
+{ #category : #accessing }
+CNode >> gravityForce [
+	^ gravityForce
 ]
 
 { #category : #initialization }
 CNode >> initialize [
 	super initialize.
 	speedVector := 0 @ 0.
-	isOnGround := false
+	isOnGround := false.
+	force := 0 @ 0.
+	gravityForce := 0 @ self gravity.
 ]
 
 { #category : #accessing }
@@ -73,6 +90,11 @@ CNode >> printOn: str [
 	str nextPut: $<.
 	str nextPutAll: self hash asString.
 	str nextPut: $>.
+]
+
+{ #category : #accessing }
+CNode >> resetSpeed [
+	speedVector := 0
 ]
 
 { #category : #accessing }
