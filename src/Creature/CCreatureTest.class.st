@@ -51,8 +51,13 @@ CCreatureTest >> testMaterialize [
 
 { #category : #tests }
 CCreatureTest >> testSerialization [
-	| values |
+	| values b |
 	values := creature serialize.
 	self assert: values size equals: (creature muscles size * 3).
-	self assert: values equals: #(10 50 3).
+	
+	b := [ :m | Array with: m contractedLength with: m extendedLength with: m strength ].
+	self assert: values equals: (b value: creature muscles first)."
+	self assert: values equals: #(10 50 3)."
+	
+
 ]
