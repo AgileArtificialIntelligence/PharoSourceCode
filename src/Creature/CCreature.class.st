@@ -132,7 +132,7 @@ CCreature >> reachStable [
 		delta := n2 position - n1 position.
 		actualLength := delta r.
 		unit := delta / actualLength.
-		force := 0.3 * (actualLength - m length) * unit.
+		force := 0.1 * m strength * (actualLength - m length) * unit.
 		n1 addForce: force.
 		n2 addForce: force negated.
 		 ].

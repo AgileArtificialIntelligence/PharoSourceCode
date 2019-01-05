@@ -21,6 +21,7 @@ CNode >> beat [
 	speedVector := speedVector + gravityForce + force.
 	"speedVector := speedVector + force." 
 	speedVector := speedVector * 0.9.
+	isOnGround ifTrue: [ speedVector := speedVector x * 0.3 @ speedVector y ].
 	self translateBy: speedVector
 	
 "	| previousPosition |
@@ -52,7 +53,7 @@ CNode >> createElement [
 
 { #category : #accessing }
 CNode >> gravity [
-	^ 1
+	^ 0.3
 ]
 
 { #category : #accessing }
