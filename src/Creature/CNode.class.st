@@ -18,7 +18,9 @@ CNode >> addForce: aForceAsPoint [
 
 { #category : #accessing }
 CNode >> beat [
-	speedVector := speedVector + gravityForce + force. 
+	speedVector := speedVector + gravityForce + force.
+	"speedVector := speedVector + force." 
+	speedVector := speedVector * 0.9.
 	self translateBy: speedVector
 	
 "	| previousPosition |
@@ -31,15 +33,13 @@ CNode >> beat [
 
 { #category : #accessing }
 CNode >> checkForCollision: platforms [
-	"(platforms anySatisfy: [ :p | p touch: self ]) ifTrue: [ speedVector := 0 @ 0 ].
-	"
 
 	isOnGround := false.
 	platforms
 		do: [ :p | 
 			(p touch: self)
 				ifTrue: [ 
-					speedVector := 0 @ 0.
+					speedVector := speedVector x @ 0.
 					p adjustNodeIfNecessary: self.
 					isOnGround := true ] ]
 ]
@@ -52,7 +52,7 @@ CNode >> createElement [
 
 { #category : #accessing }
 CNode >> gravity [
-	^ 2
+	^ 1
 ]
 
 { #category : #accessing }
@@ -90,6 +90,11 @@ CNode >> printOn: str [
 	str nextPut: $<.
 	str nextPutAll: self hash asString.
 	str nextPut: $>.
+]
+
+{ #category : #accessing }
+CNode >> resetForce [
+	force := 0
 ]
 
 { #category : #accessing }

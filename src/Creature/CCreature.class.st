@@ -125,15 +125,16 @@ CCreature >> random: aRandomGenerator [
 { #category : #'as yet unclassified' }
 CCreature >> reachStable [
 	| n1 n2 delta actualLength unit force |
+	nodes do: #resetForce.
 	muscles do: [ :m |
 		n1 := m node1.
 		n2 := m node2.
 		delta := n2 position - n1 position.
 		actualLength := delta r.
 		unit := delta / actualLength.
-		force := 0.01 * (m contractedLength - actualLength) * unit.
-		n1 addForce: force negated.
-		n2 addForce: force.
+		force := 0.3 * (actualLength - m length) * unit.
+		n1 addForce: force.
+		n2 addForce: force negated.
 		 ].
 	
 ]

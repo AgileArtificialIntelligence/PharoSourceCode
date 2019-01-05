@@ -31,16 +31,4 @@ CPlatform >> touch: node [
 
 	^ topPlatform <= bottomNode
 
-"	^ self element encompassingRectangle containsPoint: node element encompassingRectangle bottomCenter.
-"
-
-"	nodeHeight := node element encompassingRectangle height.
-	upperPlatform := self element encompassingRectangle top.
-	
-	^ (node position - (nodeHeight / 2)) < upperPlatform"
-	
-"	answer := self element encompassingRectangle containsPoint: node position.
-	deltaToApply := node element 
-	
-	^ answer"
 ]
