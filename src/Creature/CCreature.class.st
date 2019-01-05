@@ -20,7 +20,9 @@ CCreature >> beat [
 { #category : #accessing }
 CCreature >> checkForCollision: platforms [
 	nodes do: [ :n | n checkForCollision: platforms ].
-	(nodes allSatisfy: [ :n | n position y = nodes first position y ]) ifTrue: [ nodes first translateBy: 0 @ -1 ]
+	(nodes allSatisfy: [ :n | n position y = nodes first position y ]) ifTrue: [ 
+		nodes first translateBy: 0 @ -2.
+		nodes last translateBy: 0 @ -2 ]
 ]
 
 { #category : #'as yet unclassified' }

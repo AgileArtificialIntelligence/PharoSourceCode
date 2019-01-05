@@ -4,6 +4,24 @@ Class {
 	#category : #Creature
 }
 
+{ #category : #'as yet unclassified' }
+CExampleWithGA >> result01 [
+"
+pop: 400
+beat: 1000
+"
+"cr := CCreature new configureNbNodes: 2 nbMuscles: 1."
+
+| cr c |
+cr := CCreature new configureNbNodes: 4 nbMuscles: 5.
+cr materialize: #(13 32 4 36 40 4 23 29 5 40 16 5 39 19 3).
+
+c := CCanvas new.
+c addCreature: cr.
+c addPlatform: CPlatform new.
+c open
+]
+
 { #category : #running }
 CExampleWithGA >> run [
 

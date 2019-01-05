@@ -52,6 +52,16 @@ CNode >> createElement [
 ]
 
 { #category : #accessing }
+CNode >> friction [
+	^ friction
+]
+
+{ #category : #accessing }
+CNode >> friction: anObject [
+	friction := anObject
+]
+
+{ #category : #accessing }
 CNode >> gravity [
 	^ 0.3
 ]
