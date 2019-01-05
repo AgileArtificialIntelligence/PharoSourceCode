@@ -22,6 +22,23 @@ c addPlatform: CPlatform new.
 c open
 ]
 
+{ #category : #'as yet unclassified' }
+CExampleWithGA >> result02 [
+"
+pop: 1000
+beat: 600
+"
+
+| cr c |
+cr := CCreature new configureNbNodes: 6 nbMuscles: 8.
+cr materialize: #(18 23 6 40 33 3 28 17 4 23 27 4 14 37 6 39 13 3 40 14 5 17 28 3).
+
+c := CCanvas new.
+c addCreature: cr.
+c addPlatform: CPlatform new.
+c open
+]
+
 { #category : #running }
 CExampleWithGA >> run [
 
