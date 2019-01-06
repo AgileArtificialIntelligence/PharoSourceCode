@@ -10,6 +10,24 @@ Class {
 	#category : #Creature
 }
 
+{ #category : #'as yet unclassified' }
+CCreature >> addMuscleFrom: aNode to: anotherNode [
+
+	| m |
+	m := CMuscle new.
+	m node1: aNode.
+	m node2: anotherNode.
+	m contractedLength: 10 + (random nextInt: 30).
+	m extendedLength: 10 + (random nextInt: 30).
+	
+"	m contractedLength: 30.
+	m extendedLength: 30.
+"	
+	m contractedTime: (random nextInt: m maxTime - 4) + 2.
+	m strenght: (random nextInt: 3) + 1.
+	muscles add: m.
+]
+
 { #category : #accessing }
 CCreature >> beat [
 	nodes do: #beat.
@@ -81,6 +99,41 @@ CCreature >> configureNbNodes: nbNodes nbMuscles: nbMuscle [
 	nodes do: #createElement.
 	muscles do: #createElement.
 	self resetNodes
+]
+
+{ #category : #'as yet unclassified' }
+CCreature >> configureWorm: length [
+	| m lastTwoNodes n1 n2 index |
+	
+	"HEAD"
+	nodes add: CNode new.
+	nodes add: CNode new.
+	lastTwoNodes := nodes last: 2.
+	self addMuscleFrom: lastTwoNodes first to: lastTwoNodes second.
+	
+	length timesRepeat: [
+		n1 := CNode new.
+		n2 := CNode new.
+		nodes add: n1.
+		nodes add: n2.
+		self addMuscleFrom: lastTwoNodes first to: n1.
+		self addMuscleFrom: lastTwoNodes second to: n1.
+		self addMuscleFrom: lastTwoNodes first to: n2.
+		self addMuscleFrom: lastTwoNodes second to: n2.
+		self addMuscleFrom: n1 to: n2.
+	
+		lastTwoNodes := Array with: n1 with: n2.
+		].
+
+	nodes do: #createElement.
+	muscles do: #createElement.
+	
+	index := 0.
+	nodes pairsDo: [ :aNode :aSecondNode | 
+		aNode translateBy: (index * 10) @ 0. 
+		aSecondNode translateBy: (index * 10) @ 10.
+		index := index + 1 ]
+	
 ]
 
 { #category : #initialization }
