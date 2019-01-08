@@ -26,8 +26,7 @@ CCanvas >> addPlatform: aPlatform [
 { #category : #accessing }
 CCanvas >> beat [	
 	time := time + 1.
-	creatures do: #beat.
-	creatures do: [ :c | c checkForCollision: platforms ]
+	creatures do: [ :c | c beat; checkForCollision: platforms ]
 ]
 
 { #category : #'as yet unclassified' }

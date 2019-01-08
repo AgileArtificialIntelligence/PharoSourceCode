@@ -58,10 +58,26 @@ CCreature >> beat [
 
 { #category : #accessing }
 CCreature >> checkForCollision: platforms [
+	"This is an optimized version of :
+	
+	
 	nodes do: [ :n | n checkForCollision: platforms ].
 	(nodes allSatisfy: [ :n | n position y = nodes first position y ]) ifTrue: [ 
 		nodes first translateBy: 0 @ -2.
 		nodes last translateBy: 0 @ -2 ]
+"
+	| allAtTheSameLevel tmpLevel |
+	allAtTheSameLevel := true.
+	tmpLevel := nil.
+	nodes doWithIndex: [ :n :index | 
+		n checkForCollision: platforms.
+		index = 1 
+			ifTrue: [ tmpLevel := n position y ]
+			ifFalse: [ n position y ~= tmpLevel ifTrue: [ allAtTheSameLevel ] ].
+		 ].
+	allAtTheSameLevel ifFalse: [ ^ self ]. 
+	nodes first translateBy: 0 @ -2.
+	nodes last translateBy: 0 @ -2 
 ]
 
 { #category : #'as yet unclassified' }

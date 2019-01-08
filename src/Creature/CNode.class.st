@@ -115,24 +115,24 @@ CNode >> resetSpeed [
 
 { #category : #accessing }
 CNode >> translateBy: aPoint [
-self haltIf: [ aPoint x isNaN ].
+"self haltIf: [ aPoint x isNaN ].
 self haltIf: [ aPoint y isNaN ].
 
 self haltIf: [ element position x isNaN ].
-self haltIf: [ element position y isNaN ].
+self haltIf: [ element position y isNaN ]."
 	element translateBy: aPoint.
 	
-
+"
 self haltIf: [ element position x isNaN ].
-self haltIf: [ element position y isNaN ].
+self haltIf: [ element position y isNaN ]."
 ]
 
 { #category : #accessing }
 CNode >> translateTo: aPoint [
-self haltIf: [ aPoint x isNaN ].
-self haltIf: [ aPoint y isNaN ].
+"self haltIf: [ aPoint x isNaN ].
+self haltIf: [ aPoint y isNaN ]."
 	element translateTo: aPoint.
-	
+"	
 self haltIf: [ element position x isNaN ].
-self haltIf: [ element position y isNaN ].
+self haltIf: [ element position y isNaN ]."
 ]
