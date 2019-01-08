@@ -1,3 +1,16 @@
+"
+Example of use:
+
+-=-=-=-=-=-=
+creature := CCreature new configureNbNodes: 4 nbMuscles: 5.
+c := CCanvas new.
+c addPlatform: CPlatform new.
+c addCreature: creature.
+c beat.
+c open
+-=-=-=-=-=-=
+	
+"
 Class {
 	#name : #CCreature,
 	#superclass : #Object,
@@ -5,7 +18,8 @@ Class {
 		'nodes',
 		'muscles',
 		'alpha',
-		'random'
+		'random',
+		'muscleGenerator'
 	],
 	#category : #Creature
 }
@@ -13,18 +27,25 @@ Class {
 { #category : #'as yet unclassified' }
 CCreature >> addMuscleFrom: aNode to: anotherNode [
 
+	muscles add: (muscleGenerator createMuscleFrom: aNode to: anotherNode)
+]
+
+{ #category : #'as yet unclassified' }
+CCreature >> addMuscleFrom: aNode to: anotherNode maxStrength: maxStrength minLength: minLength [
+
 	| m |
+	self halt.
 	m := CMuscle new.
 	m node1: aNode.
 	m node2: anotherNode.
-	m contractedLength: 10 + (random nextInt: 30).
-	m extendedLength: 10 + (random nextInt: 30).
+	m length1: minLength + (random nextInt: 30).
+	m length2: minLength + (random nextInt: 30).
 	
 "	m contractedLength: 30.
 	m extendedLength: 30.
 "	
 	m contractedTime: (random nextInt: m maxTime - 4) + 2.
-	m strenght: (random nextInt: 3) + 1.
+	m strenght: (random next * maxStrength) + 0.3.
 	muscles add: m.
 ]
 
@@ -41,6 +62,26 @@ CCreature >> checkForCollision: platforms [
 	(nodes allSatisfy: [ :n | n position y = nodes first position y ]) ifTrue: [ 
 		nodes first translateBy: 0 @ -2.
 		nodes last translateBy: 0 @ -2 ]
+]
+
+{ #category : #'as yet unclassified' }
+CCreature >> configureBall: numberOfNodes [
+	| |
+	
+	numberOfNodes timesRepeat: [ 
+		nodes add: CNode new
+	].
+
+	nodes do: [ :n1 |
+		(nodes copyWithout: n1) do: [ :n2 |
+			self addMuscleFrom: n1 to: n2.
+		]
+	].
+
+	nodes do: #createElement.
+	muscles do: #createElement.
+	self resetNodes
+
 ]
 
 { #category : #'as yet unclassified' }
@@ -86,16 +127,7 @@ CCreature >> configureNbNodes: nbNodes nbMuscles: nbMuscle [
 			"		[ (try <= 10 or: [ n2 == n1]) or: [ muscles anySatisfy: [ :mm | mm usesNodes: { n1 . n2 } ] ] ]  
 			whileTrue: [ try := try + 1. n2 := nodes atRandom: r ].
 "
-			m node1: n1.
-			m node2: n2.
-			m contractedLength: 10 + (random nextInt: 30).
-			m extendedLength: 10 + (random nextInt: 30).
-
-			"		m contractedLength: 10 + (r nextInt: 30).
-		m extendedLength: (r nextInt: 30) + (m contractedLength)."
-			m contractedTime: (random nextInt: m maxTime - 4) + 2.
-			m strenght: (random nextInt: 3) + 1.
-			muscles add: m ].
+			self addMuscleFrom: n1 to: n2].
 	nodes do: #createElement.
 	muscles do: #createElement.
 	self resetNodes
@@ -103,7 +135,7 @@ CCreature >> configureNbNodes: nbNodes nbMuscles: nbMuscle [
 
 { #category : #'as yet unclassified' }
 CCreature >> configureWorm: length [
-	| m lastTwoNodes n1 n2 index |
+	| lastTwoNodes n1 n2 index |
 	
 	"HEAD"
 	nodes add: CNode new.
@@ -143,17 +175,26 @@ CCreature >> initialize [
 	muscles := OrderedCollection new.
 	alpha := 0.3.
 	random := Random seed: 42.
-	
+	muscleGenerator := CMuscleGenerator new
 ]
 
 { #category : #serialization }
 CCreature >> materialize: anArrayOfValues [
 	| valuesPerMuscles |
-	valuesPerMuscles := anArrayOfValues groupsOf: 3 atATimeCollect: [ :v | v ].
+	valuesPerMuscles := anArrayOfValues groupsOf: 5 atATimeCollect: [ :v | v ].
+
 	muscles with: valuesPerMuscles do: [ :m :values | 
-		m contractedLength: values first. 
-		m extendedLength: values second.
-		m strenght: values third ]
+		muscleGenerator materialize: values inMuscle: m ]
+]
+
+{ #category : #accessing }
+CCreature >> muscleGenerator [
+	^ muscleGenerator
+]
+
+{ #category : #accessing }
+CCreature >> muscleGenerator: aMuscleGenerator [
+	muscleGenerator := aMuscleGenerator
 ]
 
 { #category : #accessing }
@@ -185,9 +226,9 @@ CCreature >> reachStable [
 		n1 := m node1.
 		n2 := m node2.
 		delta := n2 position - n1 position.
-		actualLength := delta r.
+		actualLength := delta r max: 1.
 		unit := delta / actualLength.
-		force := 0.1 * m strength * (actualLength - m length) * unit.
+		force := 0.1 * m strenght * (actualLength - m length) * unit.
 		n1 addForce: force.
 		n2 addForce: force negated.
 		 ].
@@ -211,7 +252,7 @@ CCreature >> reachStableOLD [
 					(len closeTo: 0) ifFalse: [ 
 						"len := alpha * (m strength) * (len - (m length)) / len."
 						previousLen := len.
-						len := m strength * (len - m length) / (len + 1) / 10.
+						len := m strenght * (len - m length) / (len + 1) / 10.
 "						len := 0.02 * m strength * (len - m length).
 						len := len min: 200.
 "						
@@ -260,8 +301,9 @@ CCreature >> resetPosition [
 
 { #category : #serialization }
 CCreature >> serialize [
-	
-	^ (muscles flatCollect: [ :m | Array with: m contractedLength with: m extendedLength with: m strength ]) asArray
+	^ (muscles
+		flatCollect: [ :m | 
+			muscleGenerator serializeMuscle: m ]) asArray
 ]
 
 { #category : #actions }

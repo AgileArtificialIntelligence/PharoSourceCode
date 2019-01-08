@@ -109,6 +109,14 @@ GAEngine >> fitnessBlock: aOneArgBlock [
     fitnessBlock := aOneArgBlock
 ]
 
+{ #category : #visualization }
+GAEngine >> gtInspectorViewIn: composite [
+	<gtInspectorPresentationOrder: -10>
+	composite roassal2
+		title: 'View';
+		initializeView: [ self visualize ]
+]
+
 { #category : #accessing }
 GAEngine >> initialize [
     super initialize.
@@ -251,6 +259,8 @@ GAEngine >> run [
                     log generationNumber: gen.
                     log fittestIndividual: selection fittest.
                     log timeToProduceGeneration: Time now asSeconds - t.
+							log lowestFit: (population collect: #fitness) min.
+							log averageFit: (population collect: #fitness) average. 
                     logs add: log ] ]
 ]
 
@@ -271,4 +281,38 @@ GAEngine >> selection: aSelection [
 GAEngine >> shouldTerminate [
     logs ifEmpty: [ ^ false ].
     ^ terminationBlock value
+]
+
+{ #category : #visualization }
+GAEngine >> visualize [
+
+	| g d |
+	g := RTGrapher new.
+	d := RTData new.
+	d interaction popupText: [ :assoc | assoc value fitness ].
+	d connectColor: Color blue.
+	d noDot.
+	d points: self logs.
+	d y: #fitness.
+	d x: #generationNumber.
+	g add: d.
+	
+	d := RTData new.
+	d interaction popupText: [ :assoc | assoc value lowestFit ].
+	d connectColor: Color red.
+	d noDot.
+	d points: self logs.
+	d y: #lowestFit.
+	d x: #generationNumber.
+	g add: d.
+	
+	d := RTData new.
+	d interaction popupText: [ :assoc | assoc value averageFit ].
+	d connectColor: Color green.
+	d noDot.
+	d points: self logs.
+	d y: #averageFit.
+	d x: #generationNumber.
+	g add: d.
+	^ g
 ]

@@ -4,10 +4,22 @@ Class {
 	#instVars : [
 		'generationNumber',
 		'timeToProduceGeneration',
-		'fittestIndividual'
+		'fittestIndividual',
+		'averageFit',
+		'lowestFit'
 	],
 	#category : #'GeneticAlgorithm-Core'
 }
+
+{ #category : #accessing }
+GALog >> averageFit [
+	^ averageFit
+]
+
+{ #category : #accessing }
+GALog >> averageFit: aNumber [
+	averageFit := aNumber
+]
 
 { #category : #accessing }
 GALog >> fitness [
@@ -38,6 +50,16 @@ GALog >> generationNumber [
 GALog >> generationNumber: generationNumberAsInteger [
     "Set the generation number I represent"
     generationNumber := generationNumberAsInteger
+]
+
+{ #category : #accessing }
+GALog >> lowestFit [
+	^ lowestFit
+]
+
+{ #category : #accessing }
+GALog >> lowestFit: aNumber [
+	lowestFit := aNumber
 ]
 
 { #category : #accessing }

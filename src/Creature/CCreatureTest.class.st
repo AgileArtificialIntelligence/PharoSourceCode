@@ -14,9 +14,10 @@ CCreatureTest >> setUp [
 	creature := CCreature new configureNbNodes: 2 nbMuscles: 1.
 	
 	m := creature muscles first.
-	m contractedLength: 10.
-	m extendedLength: 50.
-	m contractedTime: 4.
+	m length1: 10.
+	m length2: 50.
+	m time1: 4.
+	m time2: 10.
 ]
 
 { #category : #tests }
@@ -43,21 +44,18 @@ CCreatureTest >> testBasic [
 { #category : #tests }
 CCreatureTest >> testMaterialize [
 	| values |
-	values := creature materialize: #(15 60 5).
-	self assert: values muscles first contractedLength equals: 15.
-	self assert: values muscles first extendedLength equals: 60.
-	self assert: values muscles first strength equals: 5.
+	values := creature materialize: #(10 60 2.1286719139333217 5 12).
+	self assert: values muscles first length1 equals: 10.
+	self assert: values muscles first length2 equals: 60.
+	self assert: values muscles first strenght equals: 2.1286719139333217.
+	self assert: values muscles first time1 equals: 5.
+	self assert: values muscles first time2 equals: 12.
 ]
 
 { #category : #tests }
 CCreatureTest >> testSerialization [
-	| values b |
+	| values |
 	values := creature serialize.
-	self assert: values size equals: (creature muscles size * 3).
-	
-	b := [ :m | Array with: m contractedLength with: m extendedLength with: m strength ].
-	self assert: values equals: (b value: creature muscles first)."
-	self assert: values equals: #(10 50 3)."
-	
-
+	self assert: values size equals: (creature muscles size * 5).
+	self assert: values equals: #(10 50 2.1286719139333217 4 10)
 ]

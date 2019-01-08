@@ -12,7 +12,7 @@ CBasicTest >> testBasic [
 	c addCreature: creature.
 	c open delete.
 	
-	self assert: c element numberOfElements equals: 3.
+	self assert: c element numberOfElements equals: 4.
 	self assert: c element numberOfEdges equals: 3.
 	
 	muscles := creature muscles.
@@ -27,5 +27,5 @@ CBasicTest >> testReachStable [
 	c := CCanvas new.
 	c addCreature: creature.
 	creature reachStable.
-	(CMuscle new maxTime * 2) timesRepeat: [ creature beat ]
+	(creature muscles collect: #maxTime) max * 3 timesRepeat: [ creature beat ]
 ]

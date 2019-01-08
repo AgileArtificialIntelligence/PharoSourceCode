@@ -25,6 +25,7 @@ CCanvas >> addPlatform: aPlatform [
 
 { #category : #accessing }
 CCanvas >> beat [	
+	time := time + 1.
 	creatures do: #beat.
 	creatures do: [ :c | c checkForCollision: platforms ]
 ]
@@ -45,15 +46,19 @@ CCanvas >> initialize [
 
 { #category : #accessing }
 CCanvas >> open [
-
+	| lbl |
 	creatures do: #resetPosition.
 
+	lbl := (RTLabel new elementOn: time) setAsFixed; yourself.
+	element add: lbl.
+	lbl translateBy: 80 @ 30.
 	element
 		addAnimation:
 			(RTActiveAnimation new
 				intervalInMilliseconds: 10;
 				blockToExecute: [ 
 					self beat.
+					lbl trachelShape text: time asString.
 					element signalUpdate ]).
 	^ element open
 ]

@@ -39,3 +39,13 @@ GATournamentSelection >> initialize [
     super initialize.
     tournamentSize := 5
 ]
+
+{ #category : #accessing }
+GATournamentSelection >> tournamentSize [
+	^ tournamentSize
+]
+
+{ #category : #accessing }
+GATournamentSelection >> tournamentSize: aNumber [
+	tournamentSize := aNumber
+]

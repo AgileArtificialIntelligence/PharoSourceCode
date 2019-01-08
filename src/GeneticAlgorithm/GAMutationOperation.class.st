@@ -17,6 +17,7 @@ GAMutationOperation >> checkForGeneFactory [
 { #category : #accessing }
 GAMutationOperation >> doMutate: individual [
     "Mutate genes of the argument"
+	mutationRate = 0 ifTrue: [ ^ self ].
     self checkForRandomNumber.
     self checkForGeneFactory.
     1 to: individual genes size do: [ :index | 

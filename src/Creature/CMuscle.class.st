@@ -4,11 +4,12 @@ Class {
 	#instVars : [
 		'node1',
 		'node2',
-		'contractedLength',
-		'contractedTime',
-		'extendedLength',
 		'time',
-		'strength'
+		'length1',
+		'length2',
+		'time1',
+		'time2',
+		'strenght'
 	],
 	#category : #Creature
 }
@@ -18,26 +19,6 @@ CMuscle >> beat [
 	time := time + 1.
 	time = self maxTime ifTrue: [ time := 0 ].
 
-]
-
-{ #category : #accessing }
-CMuscle >> contractedLength [
-	^ contractedLength
-]
-
-{ #category : #accessing }
-CMuscle >> contractedLength: anObject [
-	contractedLength := anObject
-]
-
-{ #category : #accessing }
-CMuscle >> contractedTime [
-	^ contractedTime
-]
-
-{ #category : #accessing }
-CMuscle >> contractedTime: anInteger [
-	contractedTime := anInteger
 ]
 
 { #category : #'as yet unclassified' }
@@ -50,16 +31,6 @@ CMuscle >> delta [
 	^ node2 element position - node1 element position
 ]
 
-{ #category : #accessing }
-CMuscle >> extendedLength [
-	^ extendedLength
-]
-
-{ #category : #accessing }
-CMuscle >> extendedLength: aLength [
-	extendedLength := aLength
-]
-
 { #category : #initialization }
 CMuscle >> initialize [
 	super initialize.
@@ -69,14 +40,39 @@ CMuscle >> initialize [
 { #category : #accessing }
 CMuscle >> length [
 	"Maybe rename it to ideal length"
-	^ time < contractedTime
-		ifTrue: [ contractedLength ]
-		ifFalse: [ extendedLength ]
+	^ time < self minTime
+		ifTrue: [ length1 ]
+		ifFalse: [ length2 ]
+]
+
+{ #category : #accessing }
+CMuscle >> length1 [
+	^ length1
+]
+
+{ #category : #accessing }
+CMuscle >> length1: aLengthAsInteger [
+	length1 := aLengthAsInteger
+]
+
+{ #category : #accessing }
+CMuscle >> length2 [
+	^ length2
+]
+
+{ #category : #accessing }
+CMuscle >> length2: aLengthAsInteger [
+	length2 := aLengthAsInteger
 ]
 
 { #category : #accessing }
 CMuscle >> maxTime [
-	^ 200
+	^ time1 max: time2
+]
+
+{ #category : #accessing }
+CMuscle >> minTime [
+	^ time1 min: time2
 ]
 
 { #category : #accessing }
@@ -85,8 +81,8 @@ CMuscle >> node1 [
 ]
 
 { #category : #accessing }
-CMuscle >> node1: anObject [
-	node1 := anObject
+CMuscle >> node1: aNode [
+	node1 := aNode
 ]
 
 { #category : #accessing }
@@ -95,18 +91,48 @@ CMuscle >> node2 [
 ]
 
 { #category : #accessing }
-CMuscle >> node2: anObject [
-	node2 := anObject
+CMuscle >> node2: aNode [
+	node2 := aNode
 ]
 
 { #category : #accessing }
-CMuscle >> strenght: anObject [
-	strength := anObject
+CMuscle >> strenght [
+	^ strenght
 ]
 
 { #category : #accessing }
-CMuscle >> strength [
-	^ strength
+CMuscle >> strenght: aStrenghtAsFloat [
+	strenght := aStrenghtAsFloat
+]
+
+{ #category : #accessing }
+CMuscle >> time [
+	^ time
+]
+
+{ #category : #accessing }
+CMuscle >> time1 [
+	^ time1
+]
+
+{ #category : #accessing }
+CMuscle >> time1: anInteger [
+	time1 := anInteger
+]
+
+{ #category : #accessing }
+CMuscle >> time2 [
+	^ time2
+]
+
+{ #category : #accessing }
+CMuscle >> time2: anInteger [
+	time2 := anInteger
+]
+
+{ #category : #accessing }
+CMuscle >> time: aTimeAsInteger [
+	time := aTimeAsInteger
 ]
 
 { #category : #'as yet unclassified' }

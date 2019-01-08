@@ -4,7 +4,7 @@ Class {
 	#category : #Creature
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #'genetic algorithm' }
 CExampleWithGA >> result01 [
 "
 pop: 400
@@ -22,7 +22,7 @@ c addPlatform: CPlatform new.
 c open
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'genetic algorithm' }
 CExampleWithGA >> result02 [
 "
 pop: 1000
@@ -39,8 +39,84 @@ c addPlatform: CPlatform new.
 c open
 ]
 
-{ #category : #running }
+{ #category : #'genetic algorithm' }
+CExampleWithGA >> result03 [
+"
+pop: 1000
+beat: 600
+
+
+mg := CMuscleGenerator new
+		minStrength: 1.5;
+		deltaStrength: 5;
+		deltaTime: 200;
+		minTime: 20;
+		minLength: 10;
+		deltaLength: 80.
+g := GAEngine new.
+g crossoverOperator: (GAConstrainedCrossoverOperation new possibleCutpoints: (1 to: 25 by: 5)).
+g mutationRate: 0.1.
+g endForMaxNumberOfGeneration: 20.
+g populationSize: 1000.
+g numberOfGenes: 5 * 5.
+g createGeneBlock: [ :r :index | mg valueForIndex: index ].
+g fitnessBlock: [ :genes |
+	creature := CCreature new configureNbNodes: 4 nbMuscles: 5.
+	creature materialize: genes.
+	creature resetPosition.
+	c := CCanvas new.
+	c addPlatform: CPlatform new.
+	c addCreature: creature.
+	1000 timesRepeat: [ c beat ].
+	creature position x
+].
+
+[g run ] timeToRun.
+g
+"
+
+| c creature |
+
+creature := CCreature new configureNbNodes: 4 nbMuscles: 5.
+	creature materialize: #(39 39 2.3072576722163975 29 137 33 45 3.62520734738801 21 143 90 12 2.1720258182250083 122 56 80 81 3.3322168974355875 178 35 15 14 3.402695832263071 54 200).
+	creature resetPosition.
+	c := CCanvas new.
+	c addPlatform: CPlatform new.
+	c addCreature: creature.
+	c open
+
+]
+
+{ #category : #'genetic algorithm' }
 CExampleWithGA >> run [
+
+| g creature c mg |
+mg := CMuscleGenerator new
+		minStrength: 3;
+		deltaStrength: 8.
+g := GAEngine new.
+g populationSize: 100.
+g numberOfGenes: 5 * 5.
+g createGeneBlock: [ :r :index | mg valueForIndex: index ].
+g fitnessBlock: [ :genes |
+	creature := CCreature new configureNbNodes: 4 nbMuscles: 5.
+	creature materialize: genes.
+	c := CCanvas new.
+	c addPlatform: CPlatform new.
+	c addCreature: creature.
+	50 timesRepeat: [ c beat ].
+	creature position x
+].
+
+g run.
+
+(g logs collect: #fitness) plot.
+
+g result "#(35 16 6 32 28 5 18 24 6 13 11 3)"
+]
+
+{ #category : #'genetic algorithm' }
+CExampleWithGA >> runOLD [
 
 | g creature c |
 g := GAEngine new.
@@ -68,4 +144,19 @@ g run.
 (g logs collect: #fitness) plot.
 
 g result "#(35 16 6 32 28 5 18 24 6 13 11 3)"
+]
+
+{ #category : #simple }
+CExampleWithGA >> simpleExample01 [
+	| mg cr c |
+	mg := CMuscleGenerator new
+		minStrength: 3;
+		deltaStrength: 8.
+	cr := CCreature new
+		muscleGenerator: mg;
+		configureNbNodes: 4 nbMuscles: 5.
+	c := CCanvas new.
+	c addCreature: cr.
+	c addPlatform: CPlatform new.
+	c open
 ]
