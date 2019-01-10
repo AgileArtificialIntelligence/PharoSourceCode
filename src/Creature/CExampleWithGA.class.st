@@ -5,38 +5,46 @@ Class {
 }
 
 { #category : #'genetic algorithm' }
-CExampleWithGA >> result01 [
-"
-pop: 400
-beat: 1000
-"
-"cr := CCreature new configureNbNodes: 2 nbMuscles: 1."
-
-| cr c |
-cr := CCreature new configureNbNodes: 4 nbMuscles: 5.
-cr materialize: #(13 32 4 36 40 4 23 29 5 40 16 5 39 19 3).
-
-c := CCanvas new.
-c addCreature: cr.
-c addPlatform: CPlatform new.
-c open
-]
-
-{ #category : #'genetic algorithm' }
 CExampleWithGA >> result02 [
-"
-pop: 1000
-beat: 600
-"
 
-| cr c |
-cr := CCreature new configureNbNodes: 6 nbMuscles: 8.
-cr materialize: #(18 23 6 40 33 3 28 17 4 23 27 4 14 37 6 39 13 3 40 14 5 17 28 3).
+"mg := CMuscleGenerator new
+		minStrength: 1.5;
+		deltaStrength: 5;
+		deltaTime: 200;
+		minTime: 20;
+		minLength: 10;
+		deltaLength: 80.
+g := GAEngine new.
+g crossoverOperator: (GAConstrainedCrossoverOperation new possibleCutpoints: (1 to: 15 by: 5)).
+g mutationRate: 0.1.
+g endForMaxNumberOfGeneration: 20.
+g populationSize: 1000.
+g numberOfGenes: 3 * 5.
+g createGeneBlock: [ :r :index | mg valueForIndex: index ].
+g fitnessBlock: [ :genes |
+	creature := CCreature new configureNbNodes: 3 nbMuscles: 3.
+	creature materialize: genes.
+	creature resetPosition.
+	c := CCanvas new.
+	c addPlatform: CPlatform new.
+	c addCreature: creature.
+	1000 timesRepeat: [ c beat ].
+	creature position x
+].
 
-c := CCanvas new.
-c addCreature: cr.
-c addPlatform: CPlatform new.
-c open
+g run.
+g."
+
+| creature c |
+creature := CCreature new configureNbNodes: 3 nbMuscles: 3.
+"creature materialize: g result."
+	creature materialize:  #(54 86 4.939039338118881 50 46 12 14 2.1024524874996637 186 77 70 87 3.5876934901288213 83 89).
+	creature resetPosition.
+	c := CCanvas new.
+	c addPlatform: CPlatform new.
+	c addCreature: creature.
+	c open
+
 ]
 
 { #category : #'genetic algorithm' }
@@ -73,15 +81,13 @@ g
 "
 
 | c creature |
-
 creature := CCreature new configureNbNodes: 4 nbMuscles: 5.
-	creature materialize: #(39 39 2.3072576722163975 29 137 33 45 3.62520734738801 21 143 90 12 2.1720258182250083 122 56 80 81 3.3322168974355875 178 35 15 14 3.402695832263071 54 200).
+	creature materialize: #(57 61 2.948715797834432 137 49 31 28 1.92998272247146 54 217 30 88 3.4641803516839538 67 128 87 82 3.2223055156517333 209 166 18 13 4.318311728918139 216 57).
 	creature resetPosition.
 	c := CCanvas new.
 	c addPlatform: CPlatform new.
 	c addCreature: creature.
 	c open
-
 ]
 
 { #category : #'genetic algorithm' }
@@ -118,7 +124,7 @@ g."
 | c creature |
 
 creature := CCreature new configureNbNodes: 4 nbMuscles: 5.
-	creature materialize: #(88 89 2.216418407725365 34 51 36 32 3.5333692184804795 198 25 14 20 1.5037983222882256 99 81 44 45 1.5524069508781688 30 49 90 19 6.460385386347951 67 72).
+	creature materialize: #(84 86 4.847119399508051 134 148 58 12 6.253399093054886 26 65 20 21 1.7179966076361 87 61 37 41 1.981972552594716 131 102 24 25 4.620223951116309 85 65).
 	creature resetPosition.
 	c := CCanvas new.
 	c addPlatform: CPlatform new.
