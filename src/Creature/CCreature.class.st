@@ -30,25 +30,6 @@ CCreature >> addMuscleFrom: aNode to: anotherNode [
 	muscles add: (muscleGenerator createMuscleFrom: aNode to: anotherNode)
 ]
 
-{ #category : #'as yet unclassified' }
-CCreature >> addMuscleFrom: aNode to: anotherNode maxStrength: maxStrength minLength: minLength [
-
-	| m |
-	self halt.
-	m := CMuscle new.
-	m node1: aNode.
-	m node2: anotherNode.
-	m length1: minLength + (random nextInt: 30).
-	m length2: minLength + (random nextInt: 30).
-	
-"	m contractedLength: 30.
-	m extendedLength: 30.
-"	
-	m contractedTime: (random nextInt: m maxTime - 4) + 2.
-	m strenght: (random next * maxStrength) + 0.3.
-	muscles add: m.
-]
-
 { #category : #accessing }
 CCreature >> beat [
 	nodes do: #beat.
