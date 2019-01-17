@@ -114,11 +114,12 @@ NNetwork >> train: someInputs desiredOutputs: desiredOutputs [
 { #category : #'as yet unclassified' }
 NNetwork >> train: train nbEpoch: nbEpoch [
     "Train the network using the train data set."
-    | sumError outputs expectedOutput epochPrecision t |
+    | sumError outputs expectedOutput epochPrecision t normalizedTrain |
+	normalizedTrain := Normalization new normalizeData: train.
     1 to: nbEpoch do: [ :epoch |
         sumError := 0.
           epochPrecision := 0.
-        train do: [ :row |
+        normalizedTrain do: [ :row |
             outputs := self feed: row allButLast.
             expectedOutput := (1 to: self numberOfOutputs) collect: [ :notUsed | 0 ].
             expectedOutput at: (row last) + 1 put: 1.
