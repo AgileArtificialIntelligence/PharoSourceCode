@@ -7,18 +7,19 @@ Class {
 { #category : #running }
 GARobotExample >> run [
 
-| g |
+| g robot  initialPosition target |
+
+initialPosition := 0 @ 0.
+target := 20 @ 20.
+
 g := GAEngine new.
 g endForMaxNumberOfGeneration: 10.
 g populationSize: 100.
 g createGeneBlock: [ :rand :index :ind | #($N $S $W $E) atRandom: rand ].
 g minimizeComparator.
 g fitnessBlock: [ :genes |
-	| distance d |
-	distance := 0.
-	2 to: genes size do: [ :pointIndex |
-			d := (genes at: pointIndex) dist: (genes at: pointIndex - 1).
-			distance := distance + (d ) ].
-		distance
+	robot position: initialPosition.
+	robot followPath: genes.
+	robot position dist: target
 ].
 ]
