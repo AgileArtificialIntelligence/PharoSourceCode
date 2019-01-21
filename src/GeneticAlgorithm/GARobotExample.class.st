@@ -19,7 +19,31 @@ g createGeneBlock: [ :rand :index :ind | #($N $S $W $E) atRandom: rand ].
 g minimizeComparator.
 g fitnessBlock: [ :genes |
 	robot position: initialPosition.
-	robot followPath: genes.
+	robot followOrders: genes.
 	robot position dist: target
 ].
+]
+
+{ #category : #running }
+GARobotExample >> runMap [
+	<script: 'self new runMap'>
+
+	| map robot g |
+	map := GARobotMap new fillDensity: 80.
+	robot := GARobot new.
+	robot map: map.
+	g := GAEngine new.
+	g endForMaxNumberOfGeneration: 10.
+	g numberOfGenes: 100.
+	g populationSize: 250.
+	g createGeneBlock: [ :rand :index :ind | #($N $S $W $E) atRandom: rand ].
+	g minimizeComparator.
+	g
+		fitnessBlock: [ :genes | 
+			robot followOrders: genes.
+			robot position dist: map exitPosition ].
+	g run.
+
+	map drawRobotPath: (robot followOrders: g result).
+	map open
 ]
