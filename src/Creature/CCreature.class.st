@@ -19,10 +19,17 @@ Class {
 		'muscles',
 		'alpha',
 		'random',
-		'muscleGenerator'
+		'muscleGenerator',
+		'bones'
 	],
 	#category : #Creature
 }
+
+{ #category : #'as yet unclassified' }
+CCreature >> addBoneFromIndex: n1 toIndex: n2 [
+
+	bones add: (CBone new node1: (self nodes at: n1); node2: (self nodes at: n2))
+]
 
 { #category : #'as yet unclassified' }
 CCreature >> addMuscleFrom: aNode to: anotherNode [
@@ -84,20 +91,22 @@ CCreature >> configureBall: numberOfNodes [
 { #category : #'as yet unclassified' }
 CCreature >> configureNbNodes: nbNodes nbMuscles: nbMuscle [
 	| m n1 n2 tryNewNode1 tryNewNode2 |
-	nbNodes timesRepeat: [ nodes add: CNode new ].
+	"We want to avoid nodes to have more than one muscles between them.
+		We look for nodes if:
+			- there is less than 10 tries
+			- we look for another node if 
+				- the two nodes are the same, or 
+				- at least one muscle uses the two nodes"
+	"		[ (try <= 10 or: [ n2 == n1]) or: [ muscles anySatisfy: [ :mm | mm usesNodes: { n1 . n2 } ] ] ]  
+			whileTrue: [ try := try + 1. n2 := nodes atRandom: r ].
+"
+	self configureNodes: nbNodes.
 	nbMuscle
 		timesRepeat: [ m := CMuscle new.
 			n1 := nodes atRandom: random.
 			n2 := n1.
 			tryNewNode1 := 0.
 			tryNewNode2 := 0.
-
-			"We want to avoid nodes to have more than one muscles between them.
-		We look for nodes if:
-			- there is less than 10 tries
-			- we look for another node if 
-				- the two nodes are the same, or 
-				- at least one muscle uses the two nodes"
 			[ tryNewNode1 < 10
 				and: [ n2 == n1
 						or: [ muscles
@@ -120,14 +129,13 @@ CCreature >> configureNbNodes: nbNodes nbMuscles: nbMuscle [
 						ifTrue: [ tryNewNode1 := tryNewNode1 + 1.
 							tryNewNode2 := 0.
 							n1 := nodes atRandom: random ] ].
-
-			"		[ (try <= 10 or: [ n2 == n1]) or: [ muscles anySatisfy: [ :mm | mm usesNodes: { n1 . n2 } ] ] ]  
-			whileTrue: [ try := try + 1. n2 := nodes atRandom: r ].
-"
-			self addMuscleFrom: n1 to: n2].
-	nodes do: #createElement.
-	muscles do: #createElement.
+			self addMuscleFrom: n1 to: n2 ].
 	self resetNodes
+]
+
+{ #category : #'as yet unclassified' }
+CCreature >> configureNodes: nbNodes [
+	nbNodes timesRepeat: [ nodes add: CNode new ]
 ]
 
 { #category : #'as yet unclassified' }
@@ -154,15 +162,21 @@ CCreature >> configureWorm: length [
 		lastTwoNodes := Array with: n1 with: n2.
 		].
 
-	nodes do: #createElement.
-	muscles do: #createElement.
-	
+	self createElements.
+
 	index := 0.
 	nodes pairsDo: [ :aNode :aSecondNode | 
 		aNode translateBy: (index * 10) @ 0. 
 		aSecondNode translateBy: (index * 10) @ 10.
 		index := index + 1 ]
 	
+]
+
+{ #category : #'as yet unclassified' }
+CCreature >> createElements [
+	nodes do: #createElement.
+	muscles do: #createElement.
+	bones do: #createElement
 ]
 
 { #category : #initialization }
@@ -172,7 +186,8 @@ CCreature >> initialize [
 	muscles := OrderedCollection new.
 	alpha := 0.3.
 	random := Random seed: 42.
-	muscleGenerator := CMuscleGenerator new
+	muscleGenerator := CMuscleGenerator new.
+	bones := OrderedCollection new
 ]
 
 { #category : #serialization }

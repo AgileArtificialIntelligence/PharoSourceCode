@@ -1,9 +1,7 @@
 Class {
 	#name : #CMuscle,
-	#superclass : #CVisualElement,
+	#superclass : #CConnection,
 	#instVars : [
-		'node1',
-		'node2',
 		'time',
 		'length1',
 		'length2',
@@ -23,7 +21,7 @@ CMuscle >> beat [
 
 { #category : #'as yet unclassified' }
 CMuscle >> createElement [
-	element := RTLine new color: Color gray trans; width: 5; edgeFrom: node1 element to: node2 element
+	element := RTLine new color: Color red trans; width: 5; edgeFrom: node1 element to: node2 element
 ]
 
 { #category : #accessing }
@@ -73,26 +71,6 @@ CMuscle >> maxTime [
 { #category : #accessing }
 CMuscle >> minTime [
 	^ time1 min: time2
-]
-
-{ #category : #accessing }
-CMuscle >> node1 [
-	^ node1
-]
-
-{ #category : #accessing }
-CMuscle >> node1: aNode [
-	node1 := aNode
-]
-
-{ #category : #accessing }
-CMuscle >> node2 [
-	^ node2
-]
-
-{ #category : #accessing }
-CMuscle >> node2: aNode [
-	node2 := aNode
 ]
 
 { #category : #accessing }
