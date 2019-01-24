@@ -95,12 +95,8 @@ CCreature >> checkForCollision: platforms [
 ]
 
 { #category : #'as yet unclassified' }
-CCreature >> configureBall: numberOfNodes [
-	| |
-	
-	numberOfNodes timesRepeat: [ 
-		nodes add: CNode new
-	].
+CCreature >> configureBall: numberOfNodes [	
+	self configureNodes: numberOfNodes.
 
 	nodes do: [ :n1 |
 		(nodes copyWithout: n1) do: [ :n2 |
