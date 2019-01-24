@@ -57,7 +57,18 @@ CCreatureTest >> testSerialization [
 	| values |
 	values := creature serialize.
 	self assert: values size equals: (creature muscles size * 5).
-	self assert: values equals: #(10 50 2.1286719139333217 4 10)
+	self assert: values equals: #(10 50 1.7899166223546101 4 10)
+	"self assert: values equals: #(10 50 2.1286719139333217 4 10)"
+]
+
+{ #category : #tests }
+CCreatureTest >> testSerializationWithBones [
+	| values |
+	creature addBoneFromIndex: 1 toIndex: 2.
+	values := creature serialize.
+	self assert: values size equals: (creature muscles size * 5).
+	self assert: values equals: #(10 50 1.7899166223546101 4 10)
+	"self assert: values equals: #(10 50 2.1286719139333217 4 10)"
 ]
 
 { #category : #tests }

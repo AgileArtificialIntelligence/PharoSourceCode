@@ -14,6 +14,7 @@ CCanvas >> addCreature: aCreature [
 	creatures add: aCreature.
 	element addAll: (aCreature nodes collect: #element).
 	element addAll: (aCreature muscles collect: #element).
+	element addAll: (aCreature bones collect: #element).
 ]
 
 { #category : #accessing }
