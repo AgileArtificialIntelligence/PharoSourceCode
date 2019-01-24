@@ -28,7 +28,13 @@ Class {
 { #category : #'as yet unclassified' }
 CCreature >> addBoneFromIndex: n1 toIndex: n2 [
 
-	bones add: (CBone new node1: (self nodes at: n1); node2: (self nodes at: n2))
+	self addBoneFromIndex: n1 toIndex: n2 length: 30
+]
+
+{ #category : #'as yet unclassified' }
+CCreature >> addBoneFromIndex: n1 toIndex: n2 length: aLength [
+
+	bones add: (CBone new node1: (self nodes at: n1); node2: (self nodes at: n2); length: aLength)
 ]
 
 { #category : #'as yet unclassified' }
@@ -42,6 +48,11 @@ CCreature >> beat [
 	nodes do: #beat.
 	muscles do: #beat.
 	self reachStable
+]
+
+{ #category : #accessing }
+CCreature >> bones [
+	^ bones
 ]
 
 { #category : #accessing }
@@ -82,8 +93,7 @@ CCreature >> configureBall: numberOfNodes [
 		]
 	].
 
-	nodes do: #createElement.
-	muscles do: #createElement.
+	self createElements.
 	self resetNodes
 
 ]
@@ -130,6 +140,8 @@ CCreature >> configureNbNodes: nbNodes nbMuscles: nbMuscle [
 							tryNewNode2 := 0.
 							n1 := nodes atRandom: random ] ].
 			self addMuscleFrom: n1 to: n2 ].
+		
+	self createElements.
 	self resetNodes
 ]
 
