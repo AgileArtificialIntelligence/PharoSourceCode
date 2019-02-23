@@ -1,7 +1,7 @@
 Class {
 	#name : #SigmoidAF,
 	#superclass : #ActivationFunction,
-	#category : #NeuralNetwork
+	#category : #'NeuralNetwork-Core'
 }
 
 { #category : #'as yet unclassified' }

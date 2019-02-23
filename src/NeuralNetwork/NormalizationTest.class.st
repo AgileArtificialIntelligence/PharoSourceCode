@@ -1,7 +1,7 @@
 Class {
 	#name : #NormalizationTest,
 	#superclass : #TestCase,
-	#category : #NeuralNetwork
+	#category : #'NeuralNetwork-Tests'
 }
 
 { #category : #tests }

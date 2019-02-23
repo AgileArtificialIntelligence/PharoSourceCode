@@ -1,7 +1,7 @@
 Class {
 	#name : #Normalization,
 	#superclass : #Object,
-	#category : #NeuralNetwork
+	#category : #'NeuralNetwork-Core'
 }
 
 { #category : #'as yet unclassified' }

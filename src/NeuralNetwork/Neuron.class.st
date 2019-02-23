@@ -9,7 +9,7 @@ Class {
 		'delta',
 		'output'
 	],
-	#category : #NeuralNetwork
+	#category : #'NeuralNetwork-Core'
 }
 
 { #category : #'as yet unclassified' }

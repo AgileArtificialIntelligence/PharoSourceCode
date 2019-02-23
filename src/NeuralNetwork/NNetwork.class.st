@@ -6,7 +6,7 @@ Class {
 		'errors',
 		'precisions'
 	],
-	#category : #NeuralNetwork
+	#category : #'NeuralNetwork-Core'
 }
 
 { #category : #initialization }

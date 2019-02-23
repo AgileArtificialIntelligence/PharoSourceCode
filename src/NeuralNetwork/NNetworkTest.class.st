@@ -1,7 +1,7 @@
 Class {
 	#name : #NNetworkTest,
 	#superclass : #TestCase,
-	#category : #NeuralNetwork
+	#category : #'NeuralNetwork-Tests'
 }
 
 { #category : #tests }

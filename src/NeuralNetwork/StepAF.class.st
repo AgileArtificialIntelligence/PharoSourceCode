@@ -1,7 +1,7 @@
 Class {
 	#name : #StepAF,
 	#superclass : #ActivationFunction,
-	#category : #NeuralNetwork
+	#category : #'NeuralNetwork-Core'
 }
 
 { #category : #'as yet unclassified' }

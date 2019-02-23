@@ -1,7 +1,7 @@
 Class {
 	#name : #PerceptronTest,
 	#superclass : #TestCase,
-	#category : #NeuralNetwork
+	#category : #'NeuralNetwork-Tests'
 }
 
 { #category : #'as yet unclassified' }
