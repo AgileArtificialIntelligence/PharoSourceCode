@@ -1,14 +1,14 @@
 SmalltalkCISpec {
   #loading : [
     SCIMetacelloLoadSpec {
-      #baseline : 'NeuralNetwork',
+      #baseline : 'AgileArtificialIntelligence',
       #directory : 'src',
       #platforms : [ #pharo ]
     }
   ],
   
   #testing : {
-  	 #categories : [ 'NeuralNetwork'
+  	 #categories : [ 'NeuralNetwork' , 'Creature' , 'GeneticAlgorithm'
  ],
   	 #defaultTimeout : 120
    	}
