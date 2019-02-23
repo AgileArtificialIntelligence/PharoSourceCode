@@ -8,7 +8,7 @@ SmalltalkCISpec {
   ],
   
   #testing : {
-  	 #categories : [ 'NeuralNetwork' , 'Creature' , 'GeneticAlgorithm'
+  	 #categories : [ 'NeuralNetwork-Tests' , 'Creature' , 'GeneticAlgorithm-Tests'
  ],
   	 #defaultTimeout : 120
    	}
