@@ -15,8 +15,8 @@ BaselineOfAgileArtificialIntelligence >> baseline: spec [
 					
 			spec package: 'NeuralNetwork' with: [ spec requires: #('Roassal2') ].
 			spec package: 'GeneticAlgorithm' with: [ spec requires: #('Roassal2') ].
-			spec package: 'Creatures' with: [ spec requires: #('GeneticAlgorithm') ].
+			spec package: 'Creature' with: [ spec requires: #('GeneticAlgorithm') ].
 			
-			spec group: 'default' with: #('Roassal2' 'NeuralNetwork' 'GeneticAlgorithm' 'Creatures').
+			spec group: 'default' with: #('Roassal2' 'NeuralNetwork' 'GeneticAlgorithm' 'Creature').
 			 ]
 ]
