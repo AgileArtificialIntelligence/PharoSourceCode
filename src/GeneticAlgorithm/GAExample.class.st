@@ -71,3 +71,30 @@ elements do: [ :e | e translateTo: e model ].
 	v add: (l edgeFrom: (v elementFromModel: (result at: index - 1)) to: (v elementFromModel: (result at: index))) ].
 v
 ]
+
+{ #category : #'as yet unclassified' }
+GAExample >> unboundedKnapsackProblem [
+	| knapsackMaxWeight boxes g |
+	knapsackMaxWeight := 15.
+	"a box = (value, weight)"
+	boxes := #(#(4 12) #(2 1) #(2 2) #(1 1) #(10 4) #(0 0)).
+	
+	g := GAEngine new.
+	g endIfNoImprovementFor: 10.
+	g populationSize: 20000.
+	g numberOfGenes: 15.
+	g createGeneBlock: [ :rand :index :ind | boxes atRandom: rand ].
+	g maximizeComparator.
+	g
+		fitnessBlock: [ :genes | 
+			| totalWeight totalValue penalty |
+			totalValue := (genes collect: #first) sum.
+			totalWeight := (genes collect: #second) sum.
+			penalty := (knapsackMaxWeight - totalWeight) abs * 50.
+			totalValue - penalty
+			 ].
+	g run.
+(	g result collect: #second) sum.
+	(	g result collect: #first) sum.
+	g result copyWithout: #(0 0)
+]
