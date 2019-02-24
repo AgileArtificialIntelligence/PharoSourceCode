@@ -98,3 +98,37 @@ GAExample >> unboundedKnapsackProblem [
 	(	g result collect: #first) sum.
 	g result copyWithout: #(0 0)
 ]
+
+{ #category : #'as yet unclassified' }
+GAExample >> zeroOneKnapsackProblem [
+	| knapsackMaxWeight boxes g decodeToBoxes |
+	knapsackMaxWeight := 15.
+	"a box = (value, weight)"
+	boxes := #(#(4 12) #(2 1) #(2 2) #(1 1) #(10 4) ).
+	
+	g := GAEngine new.
+	g endIfNoImprovementFor: 10.
+	g populationSize: 20000.
+	g numberOfGenes: boxes size.
+	g createGeneBlock: [ :rand :index :ind | #(0 1) atRandom: rand ].
+	g maximizeComparator.
+	g
+		fitnessBlock: [ :genes | 
+			| totalWeight totalValue penalty |
+			decodeToBoxes := OrderedCollection new.
+			genes doWithIndex: [ :b :ind | b = 1 ifTrue: [ decodeToBoxes add: (boxes at: ind) ] ].
+			decodeToBoxes add: #(0 0).
+			totalValue := (decodeToBoxes collect: #first) sum.
+			totalWeight := (decodeToBoxes collect: #second) sum.
+			knapsackMaxWeight < totalWeight 
+				ifTrue: [ penalty := (knapsackMaxWeight - totalWeight) abs * 100 ]
+				ifFalse: [ penalty := 0 ].
+			
+			totalValue - penalty
+			 ].
+	g run.
+
+decodeToBoxes := OrderedCollection new.
+g result doWithIndex: [ :b :ind | b = 1 ifTrue: [ decodeToBoxes add: (boxes at: ind) ] ].
+decodeToBoxes
+]
