@@ -24,7 +24,7 @@ Metacello new
 If you have a local copy:
 ```Smalltalk
 Metacello new
-  baseline: 'NeuralNetwork';
+  baseline: 'AgileArtificialIntelligence';
   repository: 'gitlocal:///Users/alexandrebergel/Dropbox/GitRepos/PharoSourceCode' ;
   lock;
   load.
