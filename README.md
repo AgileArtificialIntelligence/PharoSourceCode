@@ -21,8 +21,14 @@ Metacello new
 ```
 
 
-If you have a local copy:
+If you have a local copy of both Roassal2 and PharoSourceCode:
 ```Smalltalk
+Metacello new
+  baseline: 'ObjectProfile';
+  repository: 'gitlocal:///Users/alexandrebergel/Dropbox/GitRepos/Roassal2' ;
+  lock;
+  load.
+  
 Metacello new
   baseline: 'AgileArtificialIntelligence';
   repository: 'gitlocal:///Users/alexandrebergel/Dropbox/GitRepos/PharoSourceCode' ;
