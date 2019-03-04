@@ -55,6 +55,7 @@ GASelection >> doSelection [
             (self isIndividual: ind betterThan: fittest)
                 ifTrue: [ fittest := ind ] ].
     self createNewPopulation.
+
     initialPopulation := population.
 ]
 
