@@ -15,7 +15,7 @@ You can load it via:
 
 ```Smalltalk
 Metacello new
-  baseline: 'NeuralNetwork';
+  baseline: 'AgileArtificialIntelligence';
   repository: 'github://AgileArtificialIntelligence/PharoSourceCode/src' ;
   load.
 ```
