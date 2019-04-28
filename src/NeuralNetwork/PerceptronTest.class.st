@@ -4,7 +4,7 @@ Class {
 	#category : #'NeuralNetwork-Tests'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #util }
 PerceptronTest >> digitalComparator: inputs [
     "Return an array of three elements"
     | not and nor a b aGb aEb aLb notA notB |
@@ -38,7 +38,7 @@ PerceptronTest >> testAND [
     self assert: (p feed: #(1 1)) equals: 1.
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #tests }
 PerceptronTest >> testDigitalComparator [
     self assert: (self digitalComparator: #(0 0)) equals: #(0 1 0).
     self assert: (self digitalComparator: #(0 1)) equals: #(0 0 1).
