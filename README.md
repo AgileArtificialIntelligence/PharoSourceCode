@@ -15,7 +15,7 @@ You can load it via:
 
 ```Smalltalk
 Metacello new
-  baseline: 'NeuralNetwork';
+  baseline: 'AgileArtificialIntelligence';
   repository: 'github://AgileArtificialIntelligence/PharoSourceCode/src' ;
   load.
 ```
@@ -24,7 +24,7 @@ Metacello new
 If you have a local copy of both Roassal2 and PharoSourceCode:
 ```Smalltalk
 Metacello new
-  baseline: 'ObjectProfile';
+  baseline: 'Roassal2';
   repository: 'gitlocal:///Users/alexandrebergel/Dropbox/GitRepos/Roassal2' ;
   lock;
   load.
