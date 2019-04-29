@@ -47,3 +47,30 @@ GARobotExample >> runMap [
 	map drawRobotPath: (robot followOrders: g result).
 	map open
 ]
+
+{ #category : #running }
+GARobotExample >> runMapWithFood [
+	<script: 'self new runMapWithFood'>
+
+	| map robot g |
+	map := GARobotMap new fillDensity: 80.
+	map addFoods: 3.
+	
+	robot := GARobot new.
+	robot map: map.
+	g := GAEngine new.
+	g endForMaxNumberOfGeneration: 10.
+	g numberOfGenes: 300.
+	g populationSize: 1000.
+	g createGeneBlock: [ :rand :index :ind | #($N $S $W $E) atRandom: rand ].
+	g minimizeComparator.
+	g
+		fitnessBlock: [ :genes | 
+			robot followOrders: genes.
+			(robot position dist: map exitPosition) - (robot numberOfFoods * 5) ].
+	g run.
+
+	map drawRobotPath: (robot followOrders: g result).
+	map open.
+	g inspect
+]

@@ -10,6 +10,23 @@ Class {
 }
 
 { #category : #accessing }
+GARobotMap >> addFoods: numberOfFoodsToAdd [
+	"density is an integer"
+	
+	| addedFood |
+	addedFood := 0.
+	[ addedFood < numberOfFoodsToAdd ] whileTrue: [ 
+		| x y |
+		x := self rand: size.
+		y := self rand: size.
+		(self gridAt: x @ y) == #empty ifTrue: [ 
+			self gridAt: x @ y put: #food.
+			addedFood := addedFood + 1
+		]
+	]
+]
+
+{ #category : #accessing }
 GARobotMap >> drawRobotPath: aPath [
 	aPath do: [ :pos | self gridAt: pos put: #robot ]
 ]
@@ -93,6 +110,8 @@ GARobotMap >> open [
 	colors at: #start put: Color red.
 	colors at: #end put: Color green.
 	colors at: #robot put: Color yellow.
+	colors at: #food put: Color blue.
+
 	v := RTView new.
 	shape := RTBox new size: 10; color: [ :c | colors at: c ].
 	content do: [ :line | 
