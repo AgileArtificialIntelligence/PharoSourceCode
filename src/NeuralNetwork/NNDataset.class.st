@@ -3,7 +3,7 @@ Provide a data set
 "
 Class {
 	#name : #NNDataset,
-	#superclass : #NNObject,
+	#superclass : #Object,
 	#category : #'NeuralNetwork-Examples'
 }
 
@@ -445,8 +445,8 @@ NNDataset >> runningSeed02 [
 	<script: 'self new runningSeed02 inspect'>
 	| n data goodResults trainingData testData cut |
 	cut := 0.8.
-	n := NeuralNetwork new.
-	n configure: 7 numberOfHidden: 6 nbOfOutput: 3.
+	n := NNetwork new.
+	n configure: 7 hidden: 6 nbOfOutputs: 3.
 	
 	data := NNDataset new normalizedSeedsDatasets shuffled.
 	trainingData := data first: (data size * cut) asInteger.
