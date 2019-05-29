@@ -83,6 +83,22 @@ NMNetwork >> example01 [
 	^ n
 ]
 
+{ #category : #'as yet unclassified' }
+NMNetwork >> example02 [
+	<script: 'self new example02 inspect'>
+	
+	| n x y |
+	x := MMatrix newRows: 2 columns: 4.
+	x fromContents: #(0 1 0 1 0 0 1 1).
+	
+	y := MMatrix newRows: 2 columns: 4.
+	y fromContents: #(1 1 1 0 0 0 0 1).
+	
+	n := NMNetwork new configure: 2 hidden: 3 nbOfOutputs: 2.
+	n modelX: x y: y nbOfEpochs: 1000.
+	^ n
+]
+
 { #category : #initialization }
 NMNetwork >> feed: inputs [
 	| mat |
@@ -115,6 +131,15 @@ NMNetwork >> modelX: x y: y nbOfEpochs: nbEpochs [
 		errors add: cost.
 	].
 	^ cost
+]
+
+{ #category : #'as yet unclassified' }
+NMNetwork >> predict: inputs [
+	"Make a prediction. This method assume that the number of outputs is the same than the number of different values the network can output"
+	"The index of a collection begins at 1 in Pharo"
+	| outputs |
+	outputs := self feed: inputs.
+	^ (outputs asArray indexOf: (outputs max)) - 1
 ]
 
 { #category : #'as yet unclassified' }
