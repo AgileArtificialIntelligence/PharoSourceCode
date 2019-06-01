@@ -403,7 +403,7 @@ NNDataset >> runningIris02 [
 	data := NNDataset new normalizedIrisDataset shuffled.
 	trainingData := data first: (data size * cut) asInteger.
 	testData := data last: (data size * (1 - cut)) asInteger.
-	n train: trainingData nbEpoch: 1000.
+	n train: trainingData nbEpochs: 1000.
 	n inspect.
 	
 	goodResults := testData select: [ :row | (n predict: row allButLast) = row last ].
@@ -420,7 +420,7 @@ NNDataset >> runningIrisDataset [
 	| n |
 	n := NNetwork new.
 	n configure: 4 hidden: 5 nbOfOutputs: 3.
-	n train: (NNDataset new normalizeData: NNDataset new irisDatasetWithNumericalLast) shuffled nbEpoch: 500.
+	n train: (NNDataset new normalizeData: NNDataset new irisDatasetWithNumericalLast) shuffled nbEpochs: 500.
 	^ n
 ]
 
@@ -433,7 +433,7 @@ NNDataset >> runningSeed01 [
 	| n |
 	n := NNetwork  new.
 	n configure: 7 hidden: 5 nbOfOutputs: 3.
-	n train: NNDataset new normalizedSeedsDatasets nbEpoch: 2000.
+	n train: NNDataset new normalizedSeedsDatasets nbEpochs: 2000.
 	^ n
 ]
 
@@ -451,7 +451,7 @@ NNDataset >> runningSeed02 [
 	data := NNDataset new normalizedSeedsDatasets shuffled.
 	trainingData := data first: (data size * cut) asInteger.
 	testData := data last: (data size * (1 - cut)) asInteger.
-	n train: trainingData nbEpoch: 1000.
+	n train: trainingData nbEpochs: 1000.
 	n inspect.
 	
 	goodResults := testData select: [ :row | (n predict: row allButLast) = row last ].

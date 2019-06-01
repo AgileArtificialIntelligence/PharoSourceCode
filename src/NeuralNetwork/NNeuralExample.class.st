@@ -216,5 +216,5 @@ data := {#(0 0 0) .
     #(0 1 1) .
     #(1 0 1) .
     #(1 1 0) }.
-n train: data nbEpoch: 20000
+n train: data nbEpochs: 20000
 ]

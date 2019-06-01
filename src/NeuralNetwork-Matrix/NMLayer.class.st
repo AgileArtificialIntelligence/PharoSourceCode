@@ -5,12 +5,11 @@ Class {
 		'w',
 		'b',
 		'delta',
-		'dz',
-		'dw',
-		'db',
 		'output',
 		'previous',
-		'next'
+		'next',
+		'lr',
+		'numberOfExamples'
 	],
 	#category : #'NeuralNetwork-Matrix'
 }
@@ -21,18 +20,8 @@ NMLayer >> b [
 ]
 
 { #category : #accessing }
-NMLayer >> b: anObject [
-	b := anObject
-]
-
-{ #category : #accessing }
-NMLayer >> db [
-	^ db
-]
-
-{ #category : #accessing }
-NMLayer >> db: anObject [
-	db := anObject
+NMLayer >> b: biasVector [
+	b := biasVector
 ]
 
 { #category : #accessing }
@@ -41,34 +30,30 @@ NMLayer >> delta [
 ]
 
 { #category : #accessing }
-NMLayer >> delta: anObject [
-	delta := anObject
-]
-
-{ #category : #accessing }
-NMLayer >> dw [
-	^ dw
-]
-
-{ #category : #accessing }
-NMLayer >> dw: anObject [
-	dw := anObject
-]
-
-{ #category : #accessing }
-NMLayer >> dz [
-	^ dz
-]
-
-{ #category : #accessing }
-NMLayer >> dz: anObject [
-	dz := anObject
+NMLayer >> delta: deltaMatrix [
+	delta := deltaMatrix
 ]
 
 { #category : #initialization }
-NMLayer >> feed: mat [
-	output := (w +* mat + b) collect: [ :v | 1 / (1 + v negated exp) ].
+NMLayer >> feed: inputMatrix [
+	output := (w +* inputMatrix + b) collect: [ :v | 1 / (1 + v negated exp) ].
 	^ output
+]
+
+{ #category : #initialization }
+NMLayer >> initialize [
+	super initialize.
+	lr := 0.1
+]
+
+{ #category : #accessing }
+NMLayer >> lr [
+	^ lr
+]
+
+{ #category : #accessing }
+NMLayer >> lr: aLearningRate [
+	lr := aLearningRate
 ]
 
 { #category : #'as yet unclassified' }
@@ -86,8 +71,18 @@ NMLayer >> next [
 ]
 
 { #category : #accessing }
-NMLayer >> next: anObject [
-	next := anObject
+NMLayer >> next: aLayer [
+	next := aLayer
+]
+
+{ #category : #accessing }
+NMLayer >> numberOfExamples [
+	^ numberOfExamples
+]
+
+{ #category : #accessing }
+NMLayer >> numberOfExamples: anObject [
+	numberOfExamples := anObject
 ]
 
 { #category : #accessing }
@@ -96,45 +91,28 @@ NMLayer >> output [
 ]
 
 { #category : #accessing }
-NMLayer >> output: anObject [
-	output := anObject
-]
-
-{ #category : #accessing }
 NMLayer >> previous [
 	^ previous
 ]
 
 { #category : #accessing }
-NMLayer >> previous: anObject [
-	previous := anObject
+NMLayer >> previous: aLayer [
+	previous := aLayer
 ]
 
 { #category : #updating }
 NMLayer >> update [
-	| lr |
-	lr := 0.3.
-	w := w - ((dz +* previous output transposed) * lr * (1 / 4)).
-	b := b - (dz sumKeepDimension * lr * (1 / 4)).
-
-	
-"	w := w - (dw * lr).
-	b := b - (db * lr).
-"	
+	w := w - ((delta +* previous output transposed) * lr / numberOfExamples ).
+	b := b - (delta sumKeepDimension * lr / numberOfExamples).
 	next ifNotNil: [ next update ]
 ]
 
 { #category : #updating }
 NMLayer >> update: input [
-	| lr |
-	lr := 0.3.
-	w := w - ((dz +* input transposed) * lr * (1 / input nbColumns)).
-	b := b - (dz sumKeepDimension * lr * (1 / input nbColumns)).
-		
+	w := w - ((delta +* input transposed) * lr / numberOfExamples).
+	b := b - (delta sumKeepDimension * lr / numberOfExamples).
 	next update
-	"w := w - (dw * lr).
-	b := b - (db * lr).
-"
+
 ]
 
 { #category : #accessing }
