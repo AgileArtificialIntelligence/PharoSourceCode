@@ -128,8 +128,8 @@ NMLayer >> update [
 NMLayer >> update: input [
 	| lr |
 	lr := 0.3.
-	w := w - ((dz +* input transposed) * lr * (1 / 4)).
-	b := b - (dz sumKeepDimension * lr * (1 / 4)).
+	w := w - ((dz +* input transposed) * lr * (1 / input nbColumns)).
+	b := b - (dz sumKeepDimension * lr * (1 / input nbColumns)).
 		
 	next update
 	"w := w - (dw * lr).

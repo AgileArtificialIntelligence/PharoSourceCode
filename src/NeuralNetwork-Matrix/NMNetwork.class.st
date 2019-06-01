@@ -29,7 +29,6 @@ NMNetwork >> backwardX: x y: y [
 	[ currentLayer notNil ] whileTrue: [ 
 		dz := (currentLayer next w transposed +* dz) 
 					multiplyPerElement: (currentLayer output collect: [ :v | v * (1 - v) ]).
-		self haltIf: [ dz isNil ].
 		currentLayer dz: dz.
 		"currentLayer dw: (dz +* x transposed / 4).
 		currentLayer db: (dz sumKeepDimension / 4)."
@@ -79,7 +78,7 @@ NMNetwork >> computeCost: mat and: y [
 	| cost part1 part2 |
 	part1 := y multiplyPerElement: (mat collect: #ln).
 	part2 := (y collect: [ :v | 1 - v ]) multiplyPerElement: (mat collect: [ :v | (1 - v) ln ]).
-	cost := (part1 + part2) sum negated / 4. "m = number of training examples"
+	cost := (part1 + part2) sum negated / y nbColumns. 
 	^ cost 
 ]
 
@@ -170,6 +169,9 @@ NMNetwork >> example02 [
 NMNetwork >> example03 [
 	<script: 'self new example03 inspect'>
 	
+	"
+	self new example03
+	"
 	| n x y |
 	x := MMatrix newRows: 2 columns: 4.
 	x fromContents: #(0 0 1 1 0 1 0 1).
@@ -178,7 +180,7 @@ NMNetwork >> example03 [
 	y fromContents: #(1 1 1 0 0 0 0 1).
 	
 	n := NMNetwork new configure: 2 hidden: 3 hidden: 3 hidden: 4 nbOfOutputs: 2.
-	n modelX: x y: y nbOfEpochs: 1000.
+	n modelX: x y: y nbOfEpochs: 10000.
 	^ n
 ]
 
@@ -230,6 +232,27 @@ NMNetwork >> predict: inputs [
 	| outputs |
 	outputs := self feed: inputs.
 	^ (outputs asArray indexOf: (outputs max)) - 1
+]
+
+{ #category : #'as yet unclassified' }
+NMNetwork >> train: data nbEpochs: nbEpochs [
+	| x y labels numberOfOutputs |
+	x := (MMatrix newFromArrays: (data collect: #allButLast)) transposed.
+	
+	labels := data collect: #last.
+	numberOfOutputs := labels asSet size.
+	labels := labels collect: [ :row |
+		| expectedOutput |
+		expectedOutput := (1 to: numberOfOutputs) collect: [ :notUsed | 0 ].
+   		expectedOutput at: row + 1 put: 1.
+		expectedOutput
+		"{ 0 . 0 . 0 } at: (i + 1) put: 1"
+	].
+	"expectedOutput := (1 to: self numberOfOutputs) collect: [ :notUsed | 0 ].
+   expectedOutput at: (row last) + 1 put: 1."
+	y := (MMatrix newFromArrays: labels) transposed.
+	^ self modelX: x y: y nbOfEpochs: nbEpochs
+
 ]
 
 { #category : #'as yet unclassified' }
