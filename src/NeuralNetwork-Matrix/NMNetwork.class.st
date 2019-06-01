@@ -180,7 +180,6 @@ NMNetwork >> modelX: x y: y nbOfEpochs: nbEpochs [
 		self backwardX: x  y: y.
 		self update: x.
 		errors add: cost.
-		precisions add: ((output multiplyPerElement: y) / 3) sum / y nbRows.
 	].
 	^ cost
 ]
@@ -225,7 +224,7 @@ NMNetwork >> viewLearningCurve [
 		ifEmpty: [ ^ RTView new
 				add: (RTLabel elementOn: 'Should first run the network');
 				yourself ].
-	b := RTDoubleGrapher new.
+	b := RTGrapher new.
 
 	"We define the size of the charting area"
 	b extent: 500 @ 300.
@@ -238,22 +237,11 @@ NMNetwork >> viewLearningCurve [
 	ds y: #value.
 	ds dotShape rectangle color: Color blue.
 	b add: ds.
-	ds := RTData new.
-	ds samplingIfMoreThan: 2000.
-	ds noDot.
-	ds connectColor: Color red.
-	ds points: (precisions collectWithIndex: [ :y :i | i -> y ]).
-	ds x: #key.
-	ds y: #value.
-	ds dotShape rectangle color: Color blue.
-	b addRight: ds.
+
 	b axisX
 		noDecimal;
 		title: 'Epoch'.
 	b axisY title: 'Error'.
-	b axisYRight
-		title: 'Precision';
-		color: Color red.
 	^ b
 ]
 
