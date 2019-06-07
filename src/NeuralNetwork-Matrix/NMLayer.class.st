@@ -121,6 +121,6 @@ NMLayer >> w [
 ]
 
 { #category : #accessing }
-NMLayer >> w: anObject [
-	w := anObject
+NMLayer >> w: matrixForWeights [
+	w := matrixForWeights
 ]

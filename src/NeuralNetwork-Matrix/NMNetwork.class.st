@@ -36,11 +36,12 @@ NMNetwork >> backwardX: x y: y [
 
 { #category : #initialization }
 NMNetwork >> computeCost: mat and: y [
+	^ ((mat - y) collect: [ :v | v * v ]) sum
 "  cost = -np.sum(np.multiply(Y, np.log(A2)) +  np.multiply(1-Y, np.log(1-A2)))/m
   cost = np.squeeze(cost)
 "
 
-	^ ((mat - y) collect: [ :v | v * v ]) sum
+
 
 "	| cost part1 part2 |
 	part1 := y multiplyPerElement: (mat collect: #ln).
@@ -51,10 +52,7 @@ NMNetwork >> computeCost: mat and: y [
 
 { #category : #initialization }
 NMNetwork >> configure: nbOfInputs hidden: nbOfNeurons1 hidden: nbOfNeurons2 hidden: nbOfNeurons3 nbOfOutputs: nbOfOutputs [
-    "Configure the network with the given parameters
-    The network has only one hidden layer"
- 
-	random := Random seed: 42.
+    "Configure the network with the given parameters. The network has three hidden layers"
 	self addLayer: (NMLayer new nbInputs: nbOfNeurons1 nbOutputs: nbOfInputs random: random).
 	self addLayer: (NMLayer new nbInputs: nbOfNeurons2 nbOutputs: nbOfNeurons1 random: random).
 	self addLayer: (NMLayer new nbInputs: nbOfNeurons3 nbOutputs: nbOfNeurons2 random: random).
@@ -64,10 +62,7 @@ NMNetwork >> configure: nbOfInputs hidden: nbOfNeurons1 hidden: nbOfNeurons2 hid
 
 { #category : #initialization }
 NMNetwork >> configure: nbOfInputs hidden: nbOfNeurons1 hidden: nbOfNeurons2 nbOfOutputs: nbOfOutputs [
-    "Configure the network with the given parameters
-    The network has only one hidden layer"
- 
-	random := Random seed: 42.
+    "Configure the network with the given parameters. The network has two hidden layers"
 	self addLayer: (NMLayer new nbInputs: nbOfNeurons1 nbOutputs: nbOfInputs random: random).
 	self addLayer: (NMLayer new nbInputs: nbOfNeurons2 nbOutputs: nbOfNeurons1 random: random).
 	self addLayer: (NMLayer new nbInputs: nbOfOutputs nbOutputs: nbOfNeurons2 random: random).
@@ -76,10 +71,7 @@ NMNetwork >> configure: nbOfInputs hidden: nbOfNeurons1 hidden: nbOfNeurons2 nbO
 
 { #category : #initialization }
 NMNetwork >> configure: nbOfInputs hidden: nbOfNeurons nbOfOutputs: nbOfOutputs [
-    "Configure the network with the given parameters
-    The network has only one hidden layer"
- 
-	random := Random seed: 42.
+    "Configure the network with the given parameters. The network has only one hidden layer"
 	self addLayer: (NMLayer new nbInputs: nbOfNeurons nbOutputs: nbOfInputs random: random).
 	self addLayer: (NMLayer new nbInputs: nbOfOutputs nbOutputs: nbOfNeurons random: random).
 	
@@ -148,13 +140,11 @@ NMNetwork >> exampleSeed [
 
 { #category : #initialization }
 NMNetwork >> feed: inputs [
+	"Feed the network with the provided inputs vector"
 	| mat |
 	mat := inputs.
-	layers do: [ :l |
-		mat := l feed: mat.
-	].
+	layers do: [ :l | mat := l feed: mat ].
 	^ mat
-
 ]
 
 { #category : #initialization }
@@ -166,6 +156,7 @@ NMNetwork >> initialize [
 
 { #category : #accessing }
 NMNetwork >> lr: aLearningRateAsFloat [
+	"Globally set the learning rate"
 	layers do: [ :l | l lr: aLearningRateAsFloat ]
 ]
 
@@ -195,6 +186,7 @@ NMNetwork >> predict: inputs [
 
 { #category : #'as yet unclassified' }
 NMNetwork >> train: data nbEpochs: nbEpochs [
+	"Data is provided as a collection of arrays."
 	| x y labels numberOfOutputs |
 	x := (MMatrix newFromArrays: (data collect: #allButLast)) transposed.
 	layers do: [ :l | l numberOfExamples: data size ].
@@ -213,6 +205,7 @@ NMNetwork >> train: data nbEpochs: nbEpochs [
 
 { #category : #'as yet unclassified' }
 NMNetwork >> update: input [
+	"Update the weights and bias using the provided input vector"
 	layers first update: input
 
 ]
@@ -249,7 +242,7 @@ NMNetwork >> viewLearningCurve [
 NMNetwork >> viewLearningCurveIn: composite [
 	<gtInspectorPresentationOrder: -10>
 	composite roassal2
-		title: 'Learning';
+		title: 'Cost';
 		initializeView: [
 			self viewLearningCurve ]
 ]
