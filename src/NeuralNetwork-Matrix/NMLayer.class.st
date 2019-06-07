@@ -36,6 +36,7 @@ NMLayer >> delta: deltaMatrix [
 
 { #category : #initialization }
 NMLayer >> feed: inputMatrix [
+	"Feed the layer with the input matrix"
 	output := (w +* inputMatrix + b) collect: [ :v | 1 / (1 + v negated exp) ].
 	^ output
 ]
