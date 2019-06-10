@@ -163,6 +163,9 @@ NMNetwork >> lr: aLearningRateAsFloat [
 { #category : #'as yet unclassified' }
 NMNetwork >> modelX: x y: y nbOfEpochs: nbEpochs [
 	| cost output |
+	"We need to tell to each layer the number of examples they have"
+	layers do: [ :l | l numberOfExamples: y nbColumns ].
+	
 	errors := OrderedCollection new.
 	precisions := OrderedCollection new.
 	nbEpochs timesRepeat: [ 
@@ -173,6 +176,8 @@ NMNetwork >> modelX: x y: y nbOfEpochs: nbEpochs [
 		errors add: cost.
 	].
 	^ cost
+	
+
 ]
 
 { #category : #'as yet unclassified' }
