@@ -36,9 +36,14 @@ GAIndividual class >> create: numberOfIndividuals individualsAndInitialize: numb
 
 { #category : #'as yet unclassified' }
 GAIndividual >> computeFitnessUsing: fitnessBlock [
-    "Compute the fitness of myself"
-    self assert: [ genes notNil ] description: 'Need to have some genes first'.
-    fitness := fitnessBlock value: genes
+	"Compute the fitness of myself if not already computed"
+	self assert: [ genes notNil ] description: 'Need to have some genes first'.
+
+	"Simply exit if already computed"
+	fitness ifNotNil: [ ^ self ].
+
+	"Compute the fitness score"
+	fitness := fitnessBlock value: genes
 ]
 
 { #category : #'as yet unclassified' }
