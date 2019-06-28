@@ -65,3 +65,55 @@ GAPortEngine >> port: aPort [
 	port := aPort.
 	selection port: aPort.
 ]
+
+{ #category : #accessing }
+GAPortEngine >> runMusclesExample [
+| g mg |
+g := self.
+g crossoverOperator: (GAConstrainedCrossoverOperation new possibleCutpoints: (1 to: 15 by: 5)).
+g mutationRate: 0.1.
+g endForMaxNumberOfGeneration: 20.
+g populationSize: 100.
+g numberOfGenes: 3 * 5.
+g createGeneBlock: [ :r :index | mg valueForIndex: index ].
+g fitnessBlock: [ :genes |
+	| creature c|
+	creature := CCreature new configureNbNodes: 3 nbMuscles: 3.
+	"creature materialize: genes.
+	creature resetPosition."
+	c := CCanvas new.
+	"c addPlatform: CPlatform new.
+	c addCreature: creature.
+	1000 timesRepeat: [ c beat ]."
+	creature position x
+].
+
+^ g run.
+]
+
+{ #category : #accessing }
+GAPortEngine >> runMusclesExample: mg [
+	| g |
+	g := self.
+	g
+		crossoverOperator:
+			(GAConstrainedCrossoverOperation new
+				possibleCutpoints: (1 to: 15 by: 5)).
+	g mutationRate: 0.1.
+	g endForMaxNumberOfGeneration: 20.
+	g populationSize: 100.
+	g numberOfGenes: 3 * 5.
+	g createGeneBlock: [ :r :index | mg valueForIndex: index ].
+	g
+		fitnessBlock: [ :genes | 
+			| creature c |
+			creature := CCreature new configureNbNodes: 3 nbMuscles: 3.
+			creature materialize: genes.
+			creature resetPosition.
+			c := CCanvas new.
+			c addPlatform: CPlatform new.
+			c addCreature: creature.
+			1000 timesRepeat: [ c beat ].
+			creature position x ].
+	^ g run
+]

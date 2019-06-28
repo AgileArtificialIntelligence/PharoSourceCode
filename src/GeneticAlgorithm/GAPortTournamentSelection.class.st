@@ -34,7 +34,6 @@ GAPortTournamentSelection >> createNewPopulation [
 GAPortTournamentSelection >> doSelection [
 	"^ super doSelection"
 	| initD mapped |
-	self halt.
 	self checkIfEngineSet.
 	self checkIfInitialPopulationSet.
 	populationSize := initialPopulation size.

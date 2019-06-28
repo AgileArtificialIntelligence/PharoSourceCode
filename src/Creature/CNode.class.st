@@ -22,7 +22,7 @@ CNode >> beat [
 	"speedVector := speedVector + force." 
 	speedVector := speedVector * 0.9.
 	isOnGround ifTrue: [ speedVector := speedVector x * 0.3 @ speedVector y ].
-	speedVector logCr.
+	"speedVector logCr.  "
 	self translateBy: speedVector
 	
 ]
