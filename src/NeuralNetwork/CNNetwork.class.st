@@ -51,9 +51,9 @@ CNNetwork class >> exampleWithMNIST [
 		depth: 1
 		andOutputSize: 12.
 	cl1 stride: 2.
-	pl1 := PoolingLayer new mode: #max;
-		initializeForReceptiveFieldSize: 2
-		withStride: 2.
+	pl1 := PoolingLayer new
+		withPoolingUnitClass: MaxPoolingUnit;
+		initializeForReceptiveFieldSize: 2 withStride: 2.
 	cl2 := CNeuronLayer new
 		initializeForNbOfFeatures: 16
 		withWidth: 6

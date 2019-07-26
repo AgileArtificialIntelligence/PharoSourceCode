@@ -63,8 +63,8 @@ CNNetworkTest >> constructNetwork [
 			{f1.
 			f2}.
 	pl := PoolingLayer new
-		initializeForReceptiveFieldSize: 2
-		withStride: 2; mode: #MAX.
+		initializeForReceptiveFieldSize: 2 withStride: 2;
+		withPoolingUnitClass: MaxPoolingUnit.
 	cl2 := CNeuronLayer new
 		initializeForNbOfFeatures: 3
 		withWidth: 2

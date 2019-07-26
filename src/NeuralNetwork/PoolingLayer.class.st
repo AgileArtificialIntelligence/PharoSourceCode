@@ -35,7 +35,8 @@ Class {
 		'receptiveFieldSize',
 		'previousLayer',
 		'nextLayer',
-		'deltaCuboid'
+		'deltaCuboid',
+		'poolingUnitClass'
 	],
 	#category : #'NeuralNetwork-Core'
 }
@@ -107,7 +108,7 @@ PoolingLayer >> configureOutputForInputSize: inputSize [
 	outputSize := (inputSize - receptiveFieldSize) / stride + 1.
 	units := (1 to: outputSize)
 		collect:
-			[ :notUsed1 | (1 to: outputSize) collect: [ :notUsed2 | self mode = #MAX ifTrue: [MaxPoolingUnit new ] ]].
+			[ :notUsed1 | (1 to: outputSize) collect: [ :notUsed2 | poolingUnitClass new  ]].
 	receptiveFields := (1 to: outputSize)
 		collect: [ :notUsed | Array new: outputSize ]
 ]
@@ -190,20 +191,6 @@ PoolingLayer >> isFullyConnected [
 ]
 
 { #category : #accessing }
-PoolingLayer >> mode [
-	"To get mode attribute of the layer."
-
-	^ mode
-]
-
-{ #category : #accessing }
-PoolingLayer >> mode: aSymbol [
-	"To set mode attribute of the layer. This mode should be MAX or AVG."
-
-	mode := aSymbol
-]
-
-{ #category : #accessing }
 PoolingLayer >> nextLayer [
 	"To get the nextLayer attribute."
 
@@ -264,4 +251,9 @@ PoolingLayer >> updateWeights [
 	"To skip because it is a pooling layer."
 	
 	self nextLayer notNil ifTrue: [ self nextLayer updateWeights ].
+]
+
+{ #category : #accessing }
+PoolingLayer >> withPoolingUnitClass: aPoolingUnitClass [
+	poolingUnitClass := aPoolingUnitClass
 ]
