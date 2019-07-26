@@ -271,7 +271,7 @@ CNeuronLayer >> neuronsWidth: width height: height depth: depth [
 
 	| arr |
 	arr := (1 to: width) collect: [ :notUsed1 | (1 to: height) collect: [ :notUsed2 | Array new: depth ]].
-	neurons := arr collect: [ :i | i collect: [ :j | j collect: [ :k | Neuron new bias: 0; tanh; yourself ]]]. 
+	neurons := arr collect: [ :i | i collect: [ :j | j collect: [ :k | CNeuron new bias: 0; tanh; yourself ]]]. 
 ]
 
 { #category : #accessing }

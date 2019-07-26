@@ -29,7 +29,7 @@ CNeuronTest >> testFeed [
 	"Test the output of a convolutional neuron for specific input and bias."
 
 	| c inputs |
-	c := Neuron new.
+	c := CNeuron new.
 	c bias: 0; tanh;
 		weights: #(
 						#(#(-1 1 0) #(1 0 -1) #(0 -1 0))
