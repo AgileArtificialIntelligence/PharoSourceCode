@@ -21,7 +21,7 @@ Internal Representation and Key Implementation Points.
 Class {
 	#name : #HyperbolicTangentAF,
 	#superclass : #ActivationFunction,
-	#category : #NeuralNetwork
+	#category : #'NeuralNetwork-Core'
 }
 
 { #category : #'as yet unclassified' }

@@ -53,6 +53,16 @@ Neuron >> feed: inputs [
 ]
 
 { #category : #initialization }
+Neuron >> feedConvolutional: inputs withBias: aBias [
+	"To apply a volume as input and obtain the output of the neuron."
+
+	| z |
+	z := (NArray3D initializeWithValue: inputs) mult: (NArray3D initializeWithValue: (self weights)).
+	output := activationFunction eval: (aBias + z sum).
+	^ output
+]
+
+{ #category : #initialization }
 Neuron >> initialize [
     super initialize.
     learningRate := 0.1.
@@ -85,6 +95,13 @@ Neuron >> sigmoid [
 { #category : #'as yet unclassified' }
 Neuron >> step [
     activationFunction := StepAF new
+]
+
+{ #category : #'as yet unclassified' }
+Neuron >> tanh [
+	"To specify that the activation function is the hyperbolic tangent function"
+
+	activationFunction := HyperbolicTangentAF new
 ]
 
 { #category : #accessing }
