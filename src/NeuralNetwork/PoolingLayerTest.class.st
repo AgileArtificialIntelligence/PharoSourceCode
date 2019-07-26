@@ -35,7 +35,7 @@ PoolingLayerTest >> testFeed [
 					#(#(3) #(2) #(1) #(0))
 					#(#(1) #(2) #(3) #(4))
 	).
-	pl := PoolingLayer new.
+	pl := PoolingLayer new mode:#MAX.
 	pl initializeForReceptiveFieldSize: 2 withStride: 2.
 	pl feed: cuboid.
 	output := pl units collect: [ :row | row collect: #outputArray ].

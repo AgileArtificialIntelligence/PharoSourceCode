@@ -45,40 +45,62 @@ CNNetworkTest >> constructNetwork [
 	"To construct a simple CNN with four layers. CONV - POOL - CONV - FULLY."
 
 	| cl1 cl2 pl nl net f1 f2 f3 f4 f5 |
-	cl1 := CNeuronLayer new initializeForNbOfFeatures: 2 withWidth: 2 height: 2 depth: 3 andOutputSize: 4.
+	cl1 := CNeuronLayer new
+		initializeForNbOfFeatures: 2
+		withWidth: 2
+		height: 2
+		depth: 3
+		andOutputSize: 4.
 	cl1 stride: 2.
-	f1 := Feature new bias: 1; characteristics: #(
-		#(#(1 0 1) #(0 0 1))
-		#(#(1 1 0) #(1 0 0))).
-	f2 := Feature new bias: 0; characteristics: #(
-		#(#(1 1 0) #(1 0 0))
-		#(#(1 0 1) #(0 0 1))).
-	cl1 features: { f1 . f2 }.
-
-	pl := PoolingLayer new initializeForReceptiveFieldSize: 2 withStride: 2.
-
-	cl2 := CNeuronLayer new initializeForNbOfFeatures: 3 withWidth: 2 height: 2 depth: 2 andOutputSize: 1.
+	f1 := Feature new
+		bias: 1;
+		characteristics: #(#(#(1 0 1) #(0 0 1)) #(#(1 1 0) #(1 0 0))).
+	f2 := Feature new
+		bias: 0;
+		characteristics: #(#(#(1 1 0) #(1 0 0)) #(#(1 0 1) #(0 0 1))).
+	cl1
+		features:
+			{f1.
+			f2}.
+	pl := PoolingLayer new
+		initializeForReceptiveFieldSize: 2
+		withStride: 2; mode: #MAX.
+	cl2 := CNeuronLayer new
+		initializeForNbOfFeatures: 3
+		withWidth: 2
+		height: 2
+		depth: 2
+		andOutputSize: 1.
 	cl2 stride: 2.
-	f3 := Feature new bias: 0; characteristics: #(
-		#(#(1 1) #(1 0))
-		#(#(0 1) #(0 0))).
-	f4 := Feature new bias: 1; characteristics: #(
-		#(#(0 0) #(1 0))
-		#(#(0 1) #(1 1))).
-	f5 := Feature new bias: 0; characteristics: #(
-		#(#(0 1) #(1 1))
-		#(#(0 0) #(1 0))).
-	cl2 features: { f3 . f4 . f5 }.
-
+	f3 := Feature new
+		bias: 0;
+		characteristics: #(#(#(1 1) #(1 0)) #(#(0 1) #(0 0))).
+	f4 := Feature new
+		bias: 1;
+		characteristics: #(#(#(0 0) #(1 0)) #(#(0 1) #(1 1))).
+	f5 := Feature new
+		bias: 0;
+		characteristics: #(#(#(0 1) #(1 1)) #(#(0 0) #(1 0))).
+	cl2
+		features:
+			{f3.
+			f4.
+			f5}.
 	nl := NeuronLayer new.
 	nl initializeNbOfNeurons: 3 nbOfWeights: 3 using: (Random seed: 42).
-	nl neurons collectWithIndex: [ :neuron :index | |weights|
-		weights := (1 to: 3) collect: [ :ii | index + ii ].
-		neuron weights: weights; bias: index ].
-
+	nl neurons
+		collectWithIndex: [ :neuron :index | 
+			| weights |
+			weights := (1 to: 3) collect: [ :ii | index + ii ].
+			neuron
+				weights: weights;
+				bias: index ].
 	net := CNNetwork new.
-	net addLayer: cl1; addLayer: pl; addLayer: cl2; addLayer: nl.
-	
+	net
+		addLayer: cl1;
+		addLayer: pl;
+		addLayer: cl2;
+		addLayer: nl.
 	^ net
 ]
 

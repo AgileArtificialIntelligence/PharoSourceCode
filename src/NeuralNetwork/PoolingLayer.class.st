@@ -104,10 +104,12 @@ PoolingLayer >> configureOutputForInputSize: inputSize [
 	"To compute the output volume size and make some configurations."
 
 	| outputSize |
-	outputSize := ((inputSize - receptiveFieldSize) / stride) + 1.
-	units := (1 to: outputSize) collect: [ :notUsed1 | 
-		(1 to: outputSize) collect: [ :notUsed2 | PoolingUnit new ] ].
-	receptiveFields := (1 to: outputSize) collect: [ :notUsed | Array new: outputSize ].
+	outputSize := (inputSize - receptiveFieldSize) / stride + 1.
+	units := (1 to: outputSize)
+		collect:
+			[ :notUsed1 | (1 to: outputSize) collect: [ :notUsed2 | self mode = #MAX ifTrue: [MaxPoolingUnit new ] ]].
+	receptiveFields := (1 to: outputSize)
+		collect: [ :notUsed | Array new: outputSize ]
 ]
 
 { #category : #initialization }
@@ -169,8 +171,7 @@ PoolingLayer >> feedWithReceptiveField [
 PoolingLayer >> initialize [
 	"To custom initialization of PoolingLayer to be a max pooling by default."
 
-	super initialize.
-	mode := 'MAX'.
+	super initialize
 ]
 
 { #category : #initialization }
@@ -196,10 +197,10 @@ PoolingLayer >> mode [
 ]
 
 { #category : #accessing }
-PoolingLayer >> mode: aString [
+PoolingLayer >> mode: aSymbol [
 	"To set mode attribute of the layer. This mode should be MAX or AVG."
 
-	mode := aString
+	mode := aSymbol
 ]
 
 { #category : #accessing }

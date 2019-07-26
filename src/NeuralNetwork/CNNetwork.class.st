@@ -31,32 +31,45 @@ Class {
 
 { #category : #'as yet unclassified' }
 CNNetwork class >> exampleWithMNIST [
-
-| net fileBase reader reader2 matrix matrix2 datas labels data3D r cl1 pl1 cl2 nl |
-fileBase := 'C:\Users\vanor\Desktop\cle_yvan\NewAge\datasets\mnist\'.
-reader := IdxReader onStream: (File named: (fileBase , 'train-images-idx3-ubyte')) readStream.
-reader2 := IdxReader onStream: (File named: (fileBase , 'train-labels-idx1-ubyte')) readStream.
-matrix := reader next.
-matrix2 := reader2 next.
-
-datas := matrix first: 50.
-labels := matrix2 first: 50.
-data3D := datas collect: [ :row | row collect: [ :c | c collect: [ :e | { e } ] ] ].
-
-
-r := Random seed: 42.
-cl1 := CNeuronLayer new initializeForNbOfFeatures: 10 withWidth: 6 height: 6 depth: 1 andOutputSize: 12.
-cl1 stride: 2.
-pl1 := PoolingLayer new initializeForReceptiveFieldSize: 2 withStride: 2.
-cl2 := CNeuronLayer new initializeForNbOfFeatures: 16 withWidth: 6 height: 6 depth: 10 andOutputSize: 1.
-cl2 stride: 1.
-nl := NeuronLayer new.
-nl initializeNbOfNeurons: 10 nbOfWeights: 16 using: r.
-net := CNNetwork new.
-net addLayer: cl1; addLayer: pl1; addLayer: cl2; addLayer: nl.
-
-
-net train: data3D withLabels: labels andNbEpoch: 20.
+	| net fileBase reader reader2 matrix matrix2 datas labels data3D r cl1 pl1 cl2 nl |
+	fileBase := 'C:\Users\vanor\Desktop\cle_yvan\NewAge\datasets\mnist\'.
+	reader := IdxReader
+		onStream: (File named: fileBase , 'train-images-idx3-ubyte') readStream.
+	reader2 := IdxReader
+		onStream: (File named: fileBase , 'train-labels-idx1-ubyte') readStream.
+	matrix := reader next.
+	matrix2 := reader2 next.
+	datas := matrix first: 50.
+	labels := matrix2 first: 50.
+	data3D := datas
+		collect: [ :row | row collect: [ :c | c collect: [ :e | {e} ] ] ].
+	r := Random seed: 42.
+	cl1 := CNeuronLayer new
+		initializeForNbOfFeatures: 10
+		withWidth: 6
+		height: 6
+		depth: 1
+		andOutputSize: 12.
+	cl1 stride: 2.
+	pl1 := PoolingLayer new mode: #max;
+		initializeForReceptiveFieldSize: 2
+		withStride: 2.
+	cl2 := CNeuronLayer new
+		initializeForNbOfFeatures: 16
+		withWidth: 6
+		height: 6
+		depth: 10
+		andOutputSize: 1.
+	cl2 stride: 1.
+	nl := NeuronLayer new.
+	nl initializeNbOfNeurons: 10 nbOfWeights: 16 using: r.
+	net := CNNetwork new.
+	net
+		addLayer: cl1;
+		addLayer: pl1;
+		addLayer: cl2;
+		addLayer: nl.
+	net train: data3D withLabels: labels andNbEpoch: 20
 ]
 
 { #category : #adding }
