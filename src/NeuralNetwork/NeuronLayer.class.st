@@ -44,20 +44,6 @@ NeuronLayer >> backwardPropagateError: expected [
 ]
 
 { #category : #initialization }
-NeuronLayer >> deltas [
-	"To get deltas."
-
-	| depth sumDelta result |
-	depth := neurons anyOne weights size.
-	result := (1 to: depth) collect: [ :j |
-		sumDelta := 0.0.
-		neurons do: [ :neuron |
-			sumDelta := (neuron weights at: j) * (neuron delta) + sumDelta ].
-		sumDelta ].
-	^ result
-]
-
-{ #category : #initialization }
 NeuronLayer >> feed: someInputValues [
     "Feed the neuron layer with some inputs"
 
@@ -125,6 +111,13 @@ NeuronLayer >> numberOfNeurons [
     ^ neurons size
 ]
 
+{ #category : #accessing }
+NeuronLayer >> outputs [
+	"To get outputs of all neurons of the layer."
+
+	^ neurons collect: #output
+]
+
 { #category : #initialization }
 NeuronLayer >> previousLayer [
     "Return the previous layer connected to me"
@@ -142,8 +135,7 @@ NeuronLayer >> updateWeights [
     "Update the weights of the neuron based on the set of initial input. This method assumes that the receiver of the message invoking that method is the first hidden layer.
     We are now in the second hidden layers or in the output layer" 
     | inputs |
-	self previousLayer isFullyConnected ifTrue: [ inputs := self previousLayer neurons collect: #output ]
-								 ifFalse: [ inputs := self previousLayer outputs flattened ].
+	inputs := self previousLayer outputs.
 	
 	self updateWeights: inputs
 ]

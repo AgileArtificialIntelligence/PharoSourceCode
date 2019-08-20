@@ -80,45 +80,56 @@ CNeuronLayer >> adjustWeightsWithInputs: inputs [
 		feature ]
 ]
 
+{ #category : #'as yet unclassified' }
+CNeuronLayer >> backwardAssignError [
+	"When the next layer is a FlattenLayer."
+
+	| nextLayerDeltas |
+	nextLayerDeltas := self nextLayer deltas.
+	neurons doWithIndex: [ :row :i |
+		row doWithIndex: [ :col :j |
+			col doWithIndex: [ :neuron :k | neuron adjustDeltaWith: (((nextLayerDeltas at: i) at: j) at: k) ] ] ]
+]
+
 { #category : #initialization }
 CNeuronLayer >> backwardPropagateError [
 	"To adjust weights of features in many cases."
 	
-	self nextLayer isFullyConnected ifTrue: [ self computeDeltaWithoutNextLayer ]
-												ifFalse: [ self computeDeltaWithNextLayer ].
+	self computeDelta.
 
 	self previousLayer notNil ifTrue: [ self previousLayer backwardPropagateError ].
 ]
 
 { #category : #initialization }
-CNeuronLayer >> computeDeltaWithNextLayer [
-	"The next layer is not a fully connected layer."
+CNeuronLayer >> computeDelta [
+	"To compute derivatives with respect to the input. The next layer is not a flatten layer."
 	
-	| maxIndexesCuboid nextLayerDeltas previousPoolingStride |
-	previousPoolingStride := self nextLayer stride.
+	| nextLayerDeltas nnFeaturesWidth nnFeaturesHeight nnStride featWidth featHeight result |
 	nextLayerDeltas := self nextLayer deltas.
-	maxIndexesCuboid := self nextLayer units collect: [ :row | row collect: #indexesArray ].
-	neurons do: [ :row | row collect: [ :col | col collect: [ :neuron | neuron adjustDeltaWith: 0 ]]].
+	nnFeaturesWidth := features anyOne characteristics size.
+	nnFeaturesHeight := features anyOne characteristics anyOne size.
+	nnStride := self nextLayer nextLayer stride.
+	featWidth := features anyOne characteristics size.
+	featHeight := features anyOne characteristics anyOne size.
 	
-	maxIndexesCuboid doWithIndex: [ :row :i |
-		row doWithIndex: [ :col :j |
-			col doWithIndex: [ :maxCoordinates :k |
-				| rowIndex columnIndex |
-				rowIndex := (previousPoolingStride * (i - 1) + (maxCoordinates first)).
-				columnIndex := (previousPoolingStride * (j - 1) + (maxCoordinates second)).
-				(((neurons at: rowIndex) at: columnIndex) at: k) adjustDeltaWith: (((nextLayerDeltas at: i) at: j) at: k) ]]].
-]
-
-{ #category : #initialization }
-CNeuronLayer >> computeDeltaWithoutNextLayer [
-	"The next layer is a fully connected layer."
-	
-	| nextLayerDeltas |
-	nextLayerDeltas := self nextLayer deltas.
 	neurons doWithIndex: [ :row :n |
-		row doWithIndex: [ :col :p |
-			col doWithIndex: [ :neuronL :m |
-				neuronL adjustDeltaWith: (nextLayerDeltas at: m) ]]]
+							row doWithIndex: [ :col :p |
+								col doWithIndex: [ :neuron :m |
+									result := 0.0.
+									nextLayerDeltas doWithIndex: [ :nextLayerRow :j |
+										1 to: nnFeaturesWidth do: [ :b |
+											nextLayerRow doWithIndex: [ :nextLayerColumn :k |
+												1 to: nnFeaturesHeight do: [ :c |
+													nextLayerColumn doWithIndex: [ :delta :i |
+														| cond1 cond2 cond3 |
+														cond1 := (nnStride * (j - 1) + b = n) and: (nnStride * (k - 1) + c = p).
+														cond2 := ((n - featWidth) / stride + 1 <= j) and: ((n - 1) / stride + 1 >= j).
+														cond3 := ((p - featHeight) / stride + 1 <= k) and: ((p - 1) / stride + 1 >= k).
+														(cond1 and: (cond2 and: cond3)) ifTrue: [ 
+															result := result +
+																(delta * ((((self nextLayer features) at: i) characteristics at: b) at: c) at: m). ]
+														]]]]].
+									neuron adjustDeltaWith: result ] ] ]
 ]
 
 { #category : #'as yet unclassified' }
@@ -205,8 +216,7 @@ CNeuronLayer >> feed: anInputVolume [
 			setWeightsIntoNeurons;
 			feedWithReceptiveField.
 	outputVolume := neurons collect: [ :row | row collect: [ :col | col collect: [ :neuron | neuron output ]]].
-	^ (outputVolume size = 1) ifTrue: [ nextLayer ifNotNil: [ nextLayer feed: ((outputVolume at: 1) at: 1) ] ] 
-											ifFalse: [ nextLayer ifNotNil: [ nextLayer feed: outputVolume ] ]
+	^ nextLayer ifNotNil: [ nextLayer feed: outputVolume ]
 ]
 
 { #category : #accessing }
@@ -235,13 +245,6 @@ CNeuronLayer >> initializeForNbOfFeatures: nbOfFeatures withWidth: width height:
 	features := (1 to: nbOfFeatures) collect: [ :index |
 		Feature new initializeWidth: width height: height depth: depth; depth: index ].
 	self neuronsWidth: outputSize height: outputSize depth: nbOfFeatures.
-]
-
-{ #category : #testing }
-CNeuronLayer >> isFullyConnected [
-	"To know if the layer is a fully connected layer."
-
-	^ false
 ]
 
 { #category : #accessing }

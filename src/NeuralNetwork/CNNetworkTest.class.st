@@ -42,9 +42,9 @@ CNNetworkTest >> constructCuboid [
 
 { #category : #'as yet unclassified' }
 CNNetworkTest >> constructNetwork [
-	"To construct a simple CNN with four layers. CONV - POOL - CONV - FULLY."
+	"To construct a simple CNN with four layers. CONV - POOL - CONV - FLATTEN - FULLY."
 
-	| cl1 cl2 pl nl net f1 f2 f3 f4 f5 |
+	| cl1 cl2 pl nl net f1 f2 f3 f4 f5 fl |
 	cl1 := CNeuronLayer new
 		initializeForNbOfFeatures: 2
 		withWidth: 2
@@ -86,6 +86,7 @@ CNNetworkTest >> constructNetwork [
 			{f3.
 			f4.
 			f5}.
+	fl := FlattenLayer new.
 	nl := NeuronLayer new.
 	nl initializeNbOfNeurons: 3 nbOfWeights: 3 using: (Random seed: 42).
 	nl neurons
@@ -100,6 +101,7 @@ CNNetworkTest >> constructNetwork [
 		addLayer: cl1;
 		addLayer: pl;
 		addLayer: cl2;
+		addLayer: fl;
 		addLayer: nl.
 	^ net
 ]
@@ -124,7 +126,7 @@ CNNetworkTest >> testBeforeLastLayerComputationOfDelta [
 CNNetworkTest >> testFeed [
 	"To test the feeding of a CNN with four layers. CONV - POOL - CONV - FULLY."
 
-	| cube net res1 res2 res3 res4 |
+	| cube net res1 res2 res3 res4 res5 |
 	cube := self constructCuboid.
 	net := self constructNetwork.
 	net feed: cube.
@@ -132,7 +134,8 @@ CNNetworkTest >> testFeed [
 	res1 := (net layers first) neurons collect: [ :row | row collect: [ :col | col collect: #output ] ].
 	res2 := (net layers second) units collect: [ :row | row collect: #outputArray ].
 	res3 := (net layers third) neurons collect: [ :row | row collect: [ :col | col collect: #output ] ].
-	res4 := (net layers fourth) neurons collect: #output.
+	res4 := net layers fourth outputs.
+	res5 := net layers fifth outputs.
 	
 	self assert: (((res1 at: 1) at: 1) at: 1) equals: 0.9950547536867305. "tanh 3"
 	self assert: (((res1 at: 1) at: 2) at: 1) equals: 0.9950547536867305. "tanh 3"
@@ -182,10 +185,10 @@ CNNetworkTest >> testFeed [
 	self assert: (((res3 at: 1) at: 1) at: 2) equals: 0.9999082992696797. "tanh (1 + tanh 3 + tanh 6 +tanh 7 +tanh 9) == x2"
 	self assert: (((res3 at: 1) at: 1) at: 3) equals: 0.9993283829165195. "tanh (tanh 4 + tanh 6 +tanh 8 +tanh 9) == x3"
 	
-	self assert: (res4 at: 1) equals: 0.9999544063607851. "sigmoid ((2*x1) + (3*x2) + (4*x3) +1)"
-	self assert: (res4 at: 2) equals: 0.9999991636874457. "sigmoid ((3*x1) + (4*x2) + (5*x3) +2)"
-	self assert: (res4 at: 3) equals: 0.9999999846604051. "sigmoid ((4*x1) + (5*x2) + (6*x3) +3)"
-	self assert: (net outputLayer neurons collect: #output) equals: res4.
+	self assert: (res5 at: 1) equals: 0.9999544063607851. "sigmoid ((2*x1) + (3*x2) + (4*x3) +1)"
+	self assert: (res5 at: 2) equals: 0.9999991636874457. "sigmoid ((3*x1) + (4*x2) + (5*x3) +2)"
+	self assert: (res5 at: 3) equals: 0.9999999846604051. "sigmoid ((4*x1) + (5*x2) + (6*x3) +3)"
+	self assert: (net outputLayer neurons collect: #output) equals: res5.
 ]
 
 { #category : #tests }

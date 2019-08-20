@@ -41,63 +41,45 @@ Class {
 	#category : #'NeuralNetwork-Core'
 }
 
+{ #category : #'as yet unclassified' }
+PoolingLayer >> backwardAssignError [
+	"To assign the deltas to the previous layer which is a CNeuronLayer. The next layer is a FlattenLayer."
+
+	self computeDelta.
+
+	self previousLayer notNil ifTrue: [ self previousLayer backwardAssignError ].
+]
+
 { #category : #initialization }
 PoolingLayer >> backwardPropagateError [
-	"To adjust weights of features in many cases."
+	"To extend the output deltas cuboid within the size of input neurons cuboid. The next layer is not a FlattenLayer."
 	
-	self nextLayer isFullyConnected ifTrue: [ self computeDeltaWithoutNextLayer ]
-												ifFalse: [ self computeDeltaWithNextLayer ].
+	self computeDelta.
 
 	self previousLayer notNil ifTrue: [ self previousLayer backwardPropagateError ].
 ]
 
 { #category : #initialization }
-PoolingLayer >> computeDeltaWithNextLayer [
+PoolingLayer >> computeDelta [
 	"The next layer is not a fully connected layer."
 	
-	| nextLayerDeltas nextLayerFeaturesWidth nextLayerFeaturesHeight width height depth result nStride pStride pFeatWidth pFeatHeight  |
+	| nextLayerDeltas maxIndexesCuboid width height depth |
 	nextLayerDeltas := self nextLayer deltas.
-	nextLayerFeaturesWidth := self nextLayer features anyOne characteristics size.
-	nextLayerFeaturesHeight := self nextLayer features anyOne characteristics anyOne size.
-	width := units size.
-	height := units anyOne size.
-	depth := units anyOne anyOne outputArray size.
-	nStride := self nextLayer stride.
-	pStride := self previousLayer stride.
-	pFeatWidth := self previousLayer features anyOne characteristics size.
-	pFeatHeight := self previousLayer features anyOne characteristics anyOne size.
-	
-	deltaCuboid := (1 to: width) collect: [ :n |
-							(1 to: height) collect: [ :p |
-								(1 to: depth) collect: [ :m |
-									result := 0.0.
-									nextLayerDeltas doWithIndex: [ :nextLayerRow :j |
-										1 to: nextLayerFeaturesWidth do: [ :b |
-											nextLayerRow doWithIndex: [ :nextLayerColumn :k |
-												1 to: nextLayerFeaturesHeight do: [ :c |
-													nextLayerColumn doWithIndex: [ :delta :i |
-														| cond1 cond2 cond3 |
-														cond1 := (nStride * (j - 1) + b = n) and: (nStride * (k - 1) + c = p).
-														cond2 := ((n - pFeatWidth) / pStride + 1 <= j) and: ((n - 1) / pStride + 1 >= j).
-														cond3 := ((p - pFeatHeight) / pStride + 1 <= k) and: ((p - 1) / pStride + 1 >= k).
-														(cond1 and: (cond2 and: cond3)) ifTrue: [ 
-															result := result +
-																(delta * ((((self nextLayer features) at: i) characteristics at: b) at: c) at: m). ]
-														]]]]].
-									result ] ] ]
-]
-
-{ #category : #initialization }
-PoolingLayer >> computeDeltaWithoutNextLayer [
-	"The next layer is a fully connected layer."
-	
-	| nextLayerDeltas width height depth |
-	width := units size.
-	height := units anyOne size.
-	depth := units anyOne anyOne outputArray size.
-	nextLayerDeltas := self nextLayer deltas.
-	deltaCuboid := (1 to: width) collect: [ :i | (1 to: height) collect: [ :j |
-							(1 to: depth) collect: [ :k | nextLayerDeltas at: k ] ] ].
+	maxIndexesCuboid := units collect: [ :row | row collect: #indexesArray ].
+	width := self previousLayer neurons size.
+	height := self previousLayer neurons anyOne size.
+	depth := self previousLayer neurons anyOne anyOne size.
+	deltaCuboid := (1 to: width) collect: [ :i |
+							(1 to: height) collect: [ :j |
+								(1 to: depth) collect: [ :k | 0 ] ] ].
+						
+	maxIndexesCuboid doWithIndex: [ :row :i |
+		row doWithIndex: [ :col :j |
+			col doWithIndex: [ :maxCoordinates :k |
+				| rowIndex columnIndex |
+				rowIndex := (stride * (i - 1) + (maxCoordinates first)).
+				columnIndex := (stride * (j - 1) + (maxCoordinates second)).
+				(((deltaCuboid at: rowIndex) at: columnIndex) at: k) put: (((nextLayerDeltas at: i) at: j) at: k) ]]].
 ]
 
 { #category : #initialization }
@@ -181,13 +163,6 @@ PoolingLayer >> initializeForReceptiveFieldSize: anInteger withStride: aStride [
 
 	receptiveFieldSize := anInteger.
 	stride := aStride.
-]
-
-{ #category : #testing }
-PoolingLayer >> isFullyConnected [
-	"To know if the layer is a fully connected layer."
-
-	^ false
 ]
 
 { #category : #accessing }
