@@ -127,7 +127,7 @@ g := RTGrapher new.
 d := RTData new.
 "d label: 'Sigmoid neuron'."
 d noDot.
-d connectColor: Color blue.
+d connectColor: Color red.
 d points: learningCurveNeuron.
 d y: #yourself.
 g add: d.

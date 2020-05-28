@@ -25,6 +25,18 @@ NNetwork >> backwardPropagateError: expectedOutputs [
 ]
 
 { #category : #initialization }
+NNetwork >> configure: nbOfInputs hidden: nbOfNeurons1 hidden: nbOfNeurons2 hidden: nbOfNeurons3 nbOfOutputs: nbOfOutput [
+    "Configure the network with the given parameters
+    The network has only one hidden layer"
+    | random |
+    random := Random seed: 42.
+    self addLayer: (NeuronLayer new initializeNbOfNeurons: nbOfNeurons1 nbOfWeights: nbOfInputs using: random).
+    self addLayer: (NeuronLayer new initializeNbOfNeurons: nbOfNeurons2 nbOfWeights: nbOfNeurons1 using: random).
+	self addLayer: (NeuronLayer new initializeNbOfNeurons: nbOfNeurons3 nbOfWeights: nbOfNeurons2 using: random).
+    self addLayer: (NeuronLayer new initializeNbOfNeurons: nbOfOutput nbOfWeights: nbOfNeurons3 using: random).
+]
+
+{ #category : #initialization }
 NNetwork >> configure: nbOfInputs hidden: nbOfNeurons1 hidden: nbOfNeurons2 nbOfOutputs: nbOfOutput [
     "Configure the network with the given parameters
     The network has only one hidden layer"

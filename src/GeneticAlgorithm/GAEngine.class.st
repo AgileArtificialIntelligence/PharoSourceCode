@@ -314,5 +314,17 @@ GAEngine >> visualize [
 	d y: #averageFit.
 	d x: #generationNumber.
 	g add: d.
-	^ g
+	
+	g axisX noDecimal; title: 'Generations'.
+	g axisY title: 'Fitness'.
+	g build.
+	
+	"lb := RTLegendBuilder new.
+	lb view: g view.
+	lb addColor: Color red text: 'Best fitness'.
+	lb addColor: Color blue text: 'Average fitness'.	
+	lb addColor: Color green text: 'Worst fitness'.
+	lb build."
+	
+	^ g view
 ]
