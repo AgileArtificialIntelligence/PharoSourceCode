@@ -5,6 +5,21 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+GAExample >> example01ShortWord [
+
+| word g |
+word := 'gato'.
+g := GAEngine new.
+g populationSize: 1500.
+g numberOfGenes: word size.
+g createGeneBlock: [ :rand :index :ind | ($a to: $z) atRandom: rand ].
+g fitnessBlock: [ :genes | 
+	(word asArray with: genes collect: [ :a :b | a = b 
+        ifTrue: [ 1 ] ifFalse: [ 0 ] ]) sum ].
+g run.
+]
+
+{ #category : #'as yet unclassified' }
 GAExample >> fundamentalTheoremArithmetic [
 	| g numberOfIdentifyFactors primeNumbers candidateFactors |
 	
