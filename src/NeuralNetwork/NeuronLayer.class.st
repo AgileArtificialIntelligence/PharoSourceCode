@@ -68,6 +68,13 @@ NeuronLayer >> initializeNbOfNeurons: nbOfNeurons nbOfWeights: nbOfWeights using
 	self learningRate: 0.1
 ]
 
+{ #category : #'as yet unclassified' }
+NeuronLayer >> isFullyConnected [
+	"To know if the layer is a fully connected layer."
+
+	^ true
+]
+
 { #category : #initialization }
 NeuronLayer >> isOutputLayer [
     "Return true of the layer is the output layer (i.e., the last layer in the network)"
@@ -104,6 +111,13 @@ NeuronLayer >> numberOfNeurons [
     ^ neurons size
 ]
 
+{ #category : #accessing }
+NeuronLayer >> outputs [
+	"To get outputs of all neurons of the layer."
+
+	^ neurons collect: #output
+]
+
 { #category : #initialization }
 NeuronLayer >> previousLayer [
     "Return the previous layer connected to me"
@@ -117,17 +131,17 @@ NeuronLayer >> previousLayer: aLayer [
 ]
 
 { #category : #'as yet unclassified' }
-NeuronLayer >> updateWeight [
+NeuronLayer >> updateWeights [
     "Update the weights of the neuron based on the set of initial input. This method assumes that the receiver of the message invoking that method is the first hidden layer.
     We are now in the second hidden layers or in the output layer" 
     | inputs |
-    inputs := self previousLayer neurons collect: #output.
-        
-    self updateWeight: inputs
+	inputs := self previousLayer outputs.
+	
+	self updateWeights: inputs
 ]
 
 { #category : #'as yet unclassified' }
-NeuronLayer >> updateWeight: initialInputs [
+NeuronLayer >> updateWeights: initialInputs [
     "Update the weights of the neuron based on the set of initial input. This method assumes that the receiver of the message invoking that method is the first hidden layer."
     | inputs |
     inputs := initialInputs.
@@ -137,5 +151,5 @@ NeuronLayer >> updateWeight: initialInputs [
         n adjustBias ].
     
     self nextLayer ifNotNil: [ 
-        self nextLayer updateWeight ]
+        self nextLayer updateWeights ]
 ]

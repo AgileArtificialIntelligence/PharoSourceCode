@@ -87,6 +87,13 @@ Neuron >> step [
     activationFunction := StepAF new
 ]
 
+{ #category : #'as yet unclassified' }
+Neuron >> tanh [
+	"To specify that the activation function is the hyperbolic tangent function"
+
+	activationFunction := HyperbolicTangentAF new
+]
+
 { #category : #accessing }
 Neuron >> train: inputs desiredOutput: desiredOutput [
     | theError output delta |

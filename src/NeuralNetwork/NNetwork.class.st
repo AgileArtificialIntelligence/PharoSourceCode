@@ -120,7 +120,7 @@ NNetwork >> train: someInputs desiredOutputs: desiredOutputs [
     t := (1 to: desiredOutputs size) collect: 
             [ :i | ((desiredOutputs at: i) - (realOutputs at: i)) raisedTo: 2 ].
     self backwardPropagateError: desiredOutputs.
-    self updateWeight: someInputs.
+    self updateWeights: someInputs.
 ]
 
 { #category : #'as yet unclassified' }
@@ -140,7 +140,7 @@ NNetwork >> train: train nbEpochs: nbEpoch [
                     collect: [ :i | ((expectedOutput at: i) - (outputs at: i)) raisedTo: 2 ].
             sumError := sumError + t sum.
             self backwardPropagateError: expectedOutput.
-            self updateWeight: row allButLast.
+            self updateWeights: row allButLast.
         ].
         errors add: sumError.
           precisions add: (epochPrecision / train size) asFloat.
@@ -148,9 +148,9 @@ NNetwork >> train: train nbEpochs: nbEpoch [
 ]
 
 { #category : #'as yet unclassified' }
-NNetwork >> updateWeight: initialInputs [
+NNetwork >> updateWeights: initialInputs [
     "Update the weights of the neurons using the initial inputs"
-    layers first updateWeight: initialInputs
+    layers first updateWeights: initialInputs
 ]
 
 { #category : #'as yet unclassified' }
